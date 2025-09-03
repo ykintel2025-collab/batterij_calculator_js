@@ -6,64 +6,87 @@
     <title>Thuisbatterij Calculator - Start</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
             color: #333;
             line-height: 1.6;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
         .container {
             max-width: 800px;
+            width: 90%;
             margin: 40px auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             text-align: center;
         }
         h1 {
             color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
         }
         .step-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
             list-style: none;
             padding: 0;
-            margin-top: 40px;
+            margin: 0;
         }
         .step-item {
-            background-color: #ecf0f1;
-            padding: 20px;
-            margin: 10px;
+            background-color: #e8f0f8;
+            padding: 15px 25px;
+            margin-bottom: 15px;
             border-radius: 8px;
-            width: 200px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            text-align: left;
+            border-left: 5px solid #2980b9;
         }
         .step-number {
-            font-size: 24px;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #2980b9;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        .step-content {
+            flex-grow: 1;
         }
         .step-title {
             font-weight: bold;
-            margin-top: 10px;
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+        .step-description {
+            color: #777;
+            font-size: 0.9rem;
         }
         .btn-start {
             background-color: #27ae60;
             color: white;
-            padding: 15px 30px;
+            padding: 15px 35px;
             border: none;
-            border-radius: 4px;
+            border-radius: 50px;
             cursor: pointer;
-            font-size: 18px;
-            margin-top: 40px;
+            font-size: 1.1rem;
+            margin-top: 30px;
             text-decoration: none;
             display: inline-block;
+            transition: background-color 0.3s, transform 0.3s;
         }
         .btn-start:hover {
             background-color: #2ecc71;
+            transform: translateY(-2px);
         }
     </style>
 </head>
@@ -76,33 +99,45 @@
         <ul class="step-list">
             <li class="step-item">
                 <div class="step-number">1</div>
-                <div class="step-title">Basisverbruik</div>
-                <p>Vul in hoeveel energie u verbruikt.</p>
+                <div class="step-content">
+                    <div class="step-title">Basisverbruik</div>
+                    <div class="step-description">Vul in hoeveel energie u jaarlijks verbruikt, of schat dit in op basis van uw huishouden.</div>
+                </div>
             </li>
             <li class="step-item">
                 <div class="step-number">2</div>
-                <div class="step-title">Zonnepanelen</div>
-                <p>Geef aan of u zonnepanelen heeft.</p>
+                <div class="step-content">
+                    <div class="step-title">Zonnepanelen</div>
+                    <div class="step-description">Geef aan of u al zonnepanelen heeft en hoeveel.</div>
+                </div>
             </li>
             <li class="step-item">
                 <div class="step-number">3</div>
-                <div class="step-title">Extra Apparaten</div>
-                <p>Verwerk het verbruik van uw elektrische auto en warmtepomp.</p>
+                <div class="step-content">
+                    <div class="step-title">Grootverbruikers</div>
+                    <div class="step-description">Verwerk het verbruik van uw elektrische auto, warmtepomp, of andere grote apparaten.</div>
+                </div>
             </li>
             <li class="step-item">
                 <div class="step-number">4</div>
-                <div class="step-title">Opties</div>
-                <p>Kies uw voorkeuren voor bijvoorbeeld smart home integratie.</p>
+                <div class="step-content">
+                    <div class="step-title">Uw Wensen</div>
+                    <div class="step-description">Kies uw voorkeuren voor bijvoorbeeld oplaadsnelheid en schaalbaarheid.</div>
+                </div>
             </li>
             <li class="step-item">
                 <div class="step-number">5</div>
-                <div class="step-title">Contact</div>
-                <p>Vul uw contactgegevens in om het advies te ontvangen.</p>
+                <div class="step-content">
+                    <div class="step-title">Uw Gegevens</div>
+                    <div class="step-description">Vul uw contactgegevens in om het advies te ontvangen.</div>
+                </div>
             </li>
             <li class="step-item">
                 <div class="step-number">6</div>
-                <div class="step-title">Advies</div>
-                <p>Ontvang een persoonlijk en concreet advies.</p>
+                <div class="step-content">
+                    <div class="step-title">Persoonlijk Advies</div>
+                    <div class="step-description">Ontvang een concreet, persoonlijk advies over de aanbevolen thuisbatterij.</div>
+                </div>
             </li>
         </ul>
         
