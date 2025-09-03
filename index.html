@@ -71,6 +71,19 @@
             text-align: center;
             margin-top: 10px;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
@@ -80,8 +93,13 @@
         <p>Vul hieronder de gegevens in. We berekenen de rest voor u!</p>
 
         <form id="calculatorForm">
-            <label for="personen">Aantal personen in uw huishouden:</label><br>
-            <input type="number" id="personen" name="personen" value="1" min="1" required><br><br>
+            <label for="gezinssamenstelling">Kies uw gezinssamenstelling:</label><br>
+            <select id="gezinssamenstelling" name="gezinssamenstelling">
+                <option value="alleenstaande">Alleenstaande</option>
+                <option value="tweepersoons">Twee personen</option>
+                <option value="gezin_klein">Gezin (3-4 personen)</option>
+                <option value="gezin_groot">Groot gezin (5+ personen)</option>
+            </select><br><br>
 
             <label for="auto">Heeft u een elektrische auto?</label><br>
             <select id="auto" name="auto">
@@ -108,6 +126,36 @@
             <h3>Geschatte benodigde batterijcapaciteit: <strong id="capaciteitResultaat"></strong></h3>
         </div>
 
+        <div id="aannames" style="display:none;">
+            <h3>Aannames voor de berekening</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Omschrijving</th>
+                        <th>Dagelijks Verbruik (kWh)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Basisverbruik huishouden</td>
+                        <td id="tabelVerbruikHuishouden"></td>
+                    </tr>
+                    <tr>
+                        <td>Elektrische auto</td>
+                        <td id="tabelVerbruikAuto"></td>
+                    </tr>
+                    <tr>
+                        <td>Warmtepomp</td>
+                        <td id="tabelVerbruikWarmtepomp"></td>
+                    </tr>
+                    <tr>
+                        <td>Zonnepanelen (per paneel)</td>
+                        <td id="tabelOpbrengstPanelen"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <p id="errorMelding" class="error" style="display:none;"></p>
     </div>
 
@@ -116,26 +164,34 @@
             // Verberg de resultaat- en foutmeldingen
             document.getElementById("resultaatDiv").style.display = "none";
             document.getElementById("errorMelding").style.display = "none";
+            document.getElementById("aannames").style.display = "none";
 
-            const personen = parseInt(document.getElementById("personen").value);
+            const gezinssamenstelling = document.getElementById("gezinssamenstelling").value;
             const auto = document.getElementById("auto").value;
             const panelen = parseInt(document.getElementById("panelen").value);
             const warmtepomp = document.getElementById("warmtepomp").value;
             
-            if (isNaN(personen) || isNaN(panelen) || personen < 1 || panelen < 0) {
-                document.getElementById("errorMelding").textContent = "Voer geldige getallen in.";
+            if (isNaN(panelen) || panelen < 0) {
+                document.getElementById("errorMelding").textContent = "Voer een geldig aantal zonnepanelen in.";
                 document.getElementById("errorMelding").style.display = "block";
                 return;
             }
 
             // Aannames voor de berekening (op basis van gemiddelden)
-            const verbruik_per_persoon = 4; // kWh per dag
+            const verbruik_aannames = {
+                "alleenstaande": 8, // kWh per dag
+                "tweepersoons": 12, // kWh per dag
+                "gezin_klein": 16, // kWh per dag
+                "gezin_groot": 20 // kWh per dag
+            };
             const verbruik_auto = (auto === "ja") ? 15 : 0; // kWh per dag
             const opbrengst_per_paneel = 1; // kWh per dag (gemiddelde)
             const verbruik_warmtepomp = (warmtepomp === "ja") ? 10 : 0; // kWh per dag
 
+            const verbruik_huishouden = verbruik_aannames[gezinssamenstelling];
+
             // Bereken het totale verbruik en de opbrengst
-            const totaalVerbruik = (personen * verbruik_per_persoon) + verbruik_auto + verbruik_warmtepomp;
+            const totaalVerbruik = verbruik_huishouden + verbruik_auto + verbruik_warmtepomp;
             const opbrengstPanelen = panelen * opbrengst_per_paneel;
             const nodigUitBatterij = totaalVerbruik - opbrengstPanelen;
             const batterijCapaciteit = Math.max(0, nodigUitBatterij * 1.2);
@@ -145,6 +201,13 @@
             document.getElementById("opbrengstPanelen").textContent = opbrengstPanelen.toFixed(2);
             document.getElementById("capaciteitResultaat").textContent = batterijCapaciteit.toFixed(2) + " kWh";
             document.getElementById("resultaatDiv").style.display = "block";
+
+            // Toon de aannames
+            document.getElementById("tabelVerbruikHuishouden").textContent = verbruik_huishouden.toFixed(2) + " kWh";
+            document.getElementById("tabelVerbruikAuto").textContent = verbruik_auto.toFixed(2) + " kWh";
+            document.getElementById("tabelVerbruikWarmtepomp").textContent = verbruik_warmtepomp.toFixed(2) + " kWh";
+            document.getElementById("tabelOpbrengstPanelen").textContent = opbrengst_per_paneel.toFixed(2) + " kWh";
+            document.getElementById("aannames").style.display = "block";
         }
     </script>
 
