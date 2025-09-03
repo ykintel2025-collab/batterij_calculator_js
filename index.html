@@ -30,13 +30,13 @@
             display: block;
             margin-bottom: 5px;
         }
-        input[type="number"] {
+        input[type="number"], select {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box; /* Zorgt ervoor dat padding de breedte niet beïnvloedt */
+            box-sizing: border-box;
         }
         button {
             background-color: #2980b9;
@@ -77,28 +77,34 @@
 
     <div class="container">
         <h1>Thuisbatterij Capaciteit Berekenen</h1>
-        <p>Vul hieronder uw geschatte dagelijkse waarden in (in kWh).</p>
+        <p>Vul hieronder de gegevens in. We berekenen de rest voor u!</p>
 
         <form id="calculatorForm">
-            <label for="huisverbruik">Geschat dagelijks verbruik van uw huis:</label>
-            <input type="number" id="huisverbruik" name="huisverbruik" value="10" required>
+            <label for="personen">Aantal personen in uw huishouden:</label><br>
+            <input type="number" id="personen" name="personen" value="1" min="1" required><br><br>
 
-            <label for="autoverbruik">Geschat dagelijks verbruik van uw elektrische auto:</label>
-            <input type="number" id="autoverbruik" name="autoverbruik" value="15" required>
+            <label for="auto">Heeft u een elektrische auto?</label><br>
+            <select id="auto" name="auto">
+                <option value="nee">Nee</option>
+                <option value="ja">Ja</option>
+            </select><br><br>
 
-            <label for="zonnepanelen">Geschatte dagelijkse opbrengst van uw zonnepanelen:</label>
-            <input type="number" id="zonnepanelen" name="zonnepanelen" value="20" required>
+            <label for="panelen">Aantal zonnepanelen:</label><br>
+            <input type="number" id="panelen" name="panelen" value="10" min="0" required><br><br>
 
-            <label for="extraverbruik">Extra apparaten (bijv. warmtepomp):</label>
-            <input type="number" id="extraverbruik" name="extraverbruik" value="0">
+            <label for="warmtepomp">Heeft u een warmtepomp?</label><br>
+            <select id="warmtepomp" name="warmtepomp">
+                <option value="nee">Nee</option>
+                <option value="ja">Ja</option>
+            </select><br><br>
             
             <button type="button" onclick="berekenCapaciteit()">Bereken mijn batterijcapaciteit</button>
         </form>
         
         <div id="resultaatDiv" class="resultaat" style="display:none;">
             <h2>Aanbevolen batterijcapaciteit</h2>
-            <p>Totaal dagelijks verbruik: <span id="totaalVerbruik"></span> kWh</p>
-            <p>Opbrengst zonnepanelen: <span id="opbrengstPanelen"></span> kWh</p>
+            <p>Uw geschatte totale verbruik is: <span id="totaalVerbruik"></span> kWh</p>
+            <p>Uw geschatte opbrengst zonnepanelen is: <span id="opbrengstPanelen"></span> kWh</p>
             <h3>Geschatte benodigde batterijcapaciteit: <strong id="capaciteitResultaat"></strong></h3>
         </div>
 
@@ -111,23 +117,32 @@
             document.getElementById("resultaatDiv").style.display = "none";
             document.getElementById("errorMelding").style.display = "none";
 
-            const huisverbruik = parseFloat(document.getElementById("huisverbruik").value);
-            const autoverbruik = parseFloat(document.getElementById("autoverbruik").value);
-            const zonnepanelen = parseFloat(document.getElementById("zonnepanelen").value);
-            const extraverbruik = parseFloat(document.getElementById("extraverbruik").value || 0);
+            const personen = parseInt(document.getElementById("personen").value);
+            const auto = document.getElementById("auto").value;
+            const panelen = parseInt(document.getElementById("panelen").value);
+            const warmtepomp = document.getElementById("warmtepomp").value;
             
-            if (isNaN(huisverbruik) || isNaN(autoverbruik) || isNaN(zonnepanelen) || isNaN(extraverbruik)) {
+            if (isNaN(personen) || isNaN(panelen) || personen < 1 || panelen < 0) {
                 document.getElementById("errorMelding").textContent = "Voer geldige getallen in.";
                 document.getElementById("errorMelding").style.display = "block";
                 return;
             }
 
-            const totaalVerbruik = huisverbruik + autoverbruik + extraverbruik;
-            const nodigUitBatterij = totaalVerbruik - zonnepanelen;
+            // Aannames voor de berekening (op basis van gemiddelden)
+            const verbruik_per_persoon = 4; // kWh per dag
+            const verbruik_auto = (auto === "ja") ? 15 : 0; // kWh per dag
+            const opbrengst_per_paneel = 1; // kWh per dag (gemiddelde)
+            const verbruik_warmtepomp = (warmtepomp === "ja") ? 10 : 0; // kWh per dag
+
+            // Bereken het totale verbruik en de opbrengst
+            const totaalVerbruik = (personen * verbruik_per_persoon) + verbruik_auto + verbruik_warmtepomp;
+            const opbrengstPanelen = panelen * opbrengst_per_paneel;
+            const nodigUitBatterij = totaalVerbruik - opbrengstPanelen;
             const batterijCapaciteit = Math.max(0, nodigUitBatterij * 1.2);
             
+            // Toon de resultaten op de pagina
             document.getElementById("totaalVerbruik").textContent = totaalVerbruik.toFixed(2);
-            document.getElementById("opbrengstPanelen").textContent = zonnepanelen.toFixed(2);
+            document.getElementById("opbrengstPanelen").textContent = opbrengstPanelen.toFixed(2);
             document.getElementById("capaciteitResultaat").textContent = batterijCapaciteit.toFixed(2) + " kWh";
             document.getElementById("resultaatDiv").style.display = "block";
         }
