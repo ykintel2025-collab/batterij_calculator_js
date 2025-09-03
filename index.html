@@ -129,109 +129,135 @@
         th {
             background-color: #f2f2f2;
         }
+        /* Nieuwe stijlen voor de startpagina */
+        .start-page {
+            text-align: center;
+            padding-top: 100px;
+        }
+        .start-button {
+            background-color: #27ae60;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .start-button:hover {
+            background-color: #2ecc71;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="progress-bar-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div class="progress-text" id="progressText">0% Voltooid</div>
+    <div id="start-page" class="start-page">
+        <h1>Welkom bij de Thuisbatterij Calculator</h1>
+        <p>Start de calculator om een persoonlijk advies te ontvangen.</p>
+        <button class="start-button" onclick="startCalculator()">Start</button>
+    </div>
 
-        <div id="step-1" class="step-container active">
-            <h2 class="question-title">Wat is je geschatte jaarlijkse energieverbruik?</h2>
-            <div class="answer-option" data-value="klein" onclick="selectAnswer(1, this)">Tot 2.000 kWh (1 à 2 personen)</div>
-            <div class="answer-option" data-value="gemiddeld" onclick="selectAnswer(1, this)">2.000 - 4.000 kWh (3 personen)</div>
-            <div class="answer-option" data-value="groot" onclick="selectAnswer(1, this)">4.000 - 6.000 kWh (4 personen)</div>
-            <div class="answer-option" data-value="zeer_groot" onclick="selectAnswer(1, this)">6.000 - 8.000 kWh (5 personen)</div>
-            <div class="answer-option" data-value="mega" onclick="selectAnswer(1, this)">8.000 - 10.000 kWh (6+ personen)</div>
-        </div>
-
-        <div id="step-2" class="step-container">
-            <h2 class="question-title">Heeft u al zonnepanelen?</h2>
-            <div class="answer-option" data-value="ja" onclick="selectAnswer(2, this)">Ja</div>
-            <div class="answer-option" data-value="nee" onclick="selectAnswer(2, this)">Nee</div>
-        </div>
-        
-        <div id="step-3" class="step-container">
-            <h2 class="question-title">Heeft u een elektrische auto?</h2>
-            <div class="answer-option" data-value="ja" onclick="selectAnswer(3, this)">Ja</div>
-            <div class="answer-option" data-value="nee" onclick="selectAnswer(3, this)">Nee</div>
-        </div>
-        
-        <div id="step-4" class="step-container">
-            <h2 class="question-title">Heeft u een warmtepomp?</h2>
-            <div class="answer-option" data-value="ja" onclick="selectAnswer(4, this)">Ja</div>
-            <div class="answer-option" data-value="nee" onclick="selectAnswer(4, this)">Nee</div>
-        </div>
-
-        <div id="step-5" class="step-container">
-            <h2 class="question-title">Hoe snel wil je dat je batterij oplaadt?</h2>
-            <div class="answer-option" data-value="1-2" onclick="selectAnswer(5, this)">Binnen 1-2 uur (zeer hoge snelheid, geschikt voor intensief gebruik)</div>
-            <div class="answer-option" data-value="2-4" onclick="selectAnswer(5, this)">Binnen 2-4 uur (hoge snelheid, geschikt voor dagelijks gebruik)</div>
-            <div class="answer-option" data-value="4-6" onclick="selectAnswer(5, this)">Binnen 4-6 uur (gemiddelde snelheid, geschikt voor normaal huishoudelijk gebruik)</div>
-            <div class="answer-option" data-value="meer-6" onclick="selectAnswer(5, this)">Meer dan 6 uur (lage snelheid, geschikt voor sporadisch gebruik)</div>
-            <div class="answer-option" data-value="weet-niet" onclick="selectAnswer(5, this)">Ik weet het niet</div>
-        </div>
-
-        <div id="step-6" class="step-container">
-            <h2 class="question-title">Wil je een schaalbare batterij?</h2>
-            <div class="answer-option" data-value="zeer-belangrijk" onclick="selectAnswer(6, this)">Zeer belangrijk</div>
-            <div class="answer-option" data-value="belangrijk" onclick="selectAnswer(6, this)">Belangrijk</div>
-            <div class="answer-option" data-value="niet-zo-belangrijk" onclick="selectAnswer(6, this)">Niet zo belangrijk</div>
-            <div class="answer-option" data-value="helemaal-niet-belangrijk" onclick="selectAnswer(6, this)">Helemaal niet belangrijk</div>
-        </div>
-        
-        <div id="step-7" class="step-container">
-            <h2 class="question-title">Hoe belangrijk is integratie met smart home technologie voor jou?</h2>
-            <div class="answer-option" data-value="zeer-belangrijk" onclick="selectAnswer(7, this)">Zeer belangrijk</div>
-            <div class="answer-option" data-value="belangrijk" onclick="selectAnswer(7, this)">Belangrijk</div>
-            <div class="answer-option" data-value="niet-zo-belangrijk" onclick="selectAnswer(7, this)">Niet zo belangrijk</div>
-            <div class="answer-option" data-value="helemaal-niet-belangrijk" onclick="selectAnswer(7, this)">Helemaal niet belangrijk</div>
-        </div>
-
-        <div id="step-8" class="step-container">
-            <h2 class="question-title">Ben je geïnteresseerd in energie-arbitrage?</h2>
-            <div class="answer-option" data-value="zeer-geinteresseerd" onclick="selectAnswer(8, this)">Ja, zeer geïnteresseerd</div>
-            <div class="answer-option" data-value="enigszins-geinteresseerd" onclick="selectAnswer(8, this)">Ja, enigszins geïnteresseerd</div>
-            <div class="answer-option" data-value="niet-geinteresseerd" onclick="selectAnswer(8, this)">Nee, niet geïnteresseerd</div>
-        </div>
-
-        <div id="step-9" class="step-container">
-            <h2 class="question-title">Aantal zonnepanelen:</h2>
-            <input type="number" id="panelenInput" class="input-text" placeholder="Aantal zonnepanelen">
-        </div>
-
-        <div id="step-10" class="step-container">
-            <h2 class="question-title">Wat is je voornaam?</h2>
-            <input type="text" id="voornaamInput" class="input-text" placeholder="Voornaam">
-        </div>
-        
-        <div id="step-11" class="step-container">
-            <h2 class="question-title">Wat is je achternaam?</h2>
-            <input type="text" id="achternaamInput" class="input-text" placeholder="Achternaam">
-        </div>
-
-        <div id="step-12" class="step-container">
-            <h2 class="question-title">Wat is je adres?</h2>
-            <input type="text" id="adresInput" class="input-text" placeholder="bijv. Keizersgracht 123, Amsterdam">
-        </div>
-
-        <div id="resultaat-stap" class="step-container">
-            <h2 class="question-title">Uw advies</h2>
-            <div class="resultaat">
-                <h2>Aanbevolen batterijcapaciteit</h2>
-                <p>Uw geschatte totale verbruik is: <span id="totaalVerbruik"></span> kWh</p>
-                <p>Uw geschatte opbrengst zonnepanelen is: <span id="opbrengstPanelen"></span> kWh</p>
-                <h3>Geschatte benodigde batterijcapaciteit: <strong id="capaciteitResultaat"></strong></h3>
+    <div id="calculator-container" style="display:none;">
+        <div class="container">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
             </div>
-            <div id="aanvullendAdvies"></div>
-        </div>
+            <div class="progress-text" id="progressText">0% Voltooid</div>
 
-        <div class="button-container">
-            <button class="btn btn-secondary" id="terugBtn" onclick="prevStep()" style="display:none;">← Terug</button>
-            <button class="btn btn-primary" id="volgendeBtn" onclick="nextStep()" style="display:none;">Volgende →</button>
+            <div id="step-1" class="step-container active">
+                <h2 class="question-title">Wat is je geschatte jaarlijkse energieverbruik?</h2>
+                <div class="answer-option" data-value="klein" onclick="selectAnswer(1, this)">Tot 2.000 kWh (1 à 2 personen)</div>
+                <div class="answer-option" data-value="gemiddeld" onclick="selectAnswer(1, this)">2.000 - 4.000 kWh (3 personen)</div>
+                <div class="answer-option" data-value="groot" onclick="selectAnswer(1, this)">4.000 - 6.000 kWh (4 personen)</div>
+                <div class="answer-option" data-value="zeer_groot" onclick="selectAnswer(1, this)">6.000 - 8.000 kWh (5 personen)</div>
+                <div class="answer-option" data-value="mega" onclick="selectAnswer(1, this)">8.000 - 10.000 kWh (6+ personen)</div>
+            </div>
+
+            <div id="step-2" class="step-container">
+                <h2 class="question-title">Heeft u al zonnepanelen?</h2>
+                <div class="answer-option" data-value="ja" onclick="selectAnswer(2, this)">Ja</div>
+                <div class="answer-option" data-value="nee" onclick="selectAnswer(2, this)">Nee</div>
+            </div>
+            
+            <div id="step-3" class="step-container">
+                <h2 class="question-title">Heeft u een elektrische auto?</h2>
+                <div class="answer-option" data-value="ja" onclick="selectAnswer(3, this)">Ja</div>
+                <div class="answer-option" data-value="nee" onclick="selectAnswer(3, this)">Nee</div>
+            </div>
+            
+            <div id="step-4" class="step-container">
+                <h2 class="question-title">Heeft u een warmtepomp?</h2>
+                <div class="answer-option" data-value="ja" onclick="selectAnswer(4, this)">Ja</div>
+                <div class="answer-option" data-value="nee" onclick="selectAnswer(4, this)">Nee</div>
+            </div>
+
+            <div id="step-5" class="step-container">
+                <h2 class="question-title">Hoe snel wil je dat je batterij oplaadt?</h2>
+                <div class="answer-option" data-value="1-2" onclick="selectAnswer(5, this)">Binnen 1-2 uur (zeer hoge snelheid, geschikt voor intensief gebruik)</div>
+                <div class="answer-option" data-value="2-4" onclick="selectAnswer(5, this)">Binnen 2-4 uur (hoge snelheid, geschikt voor dagelijks gebruik)</div>
+                <div class="answer-option" data-value="4-6" onclick="selectAnswer(5, this)">Binnen 4-6 uur (gemiddelde snelheid, geschikt voor normaal huishoudelijk gebruik)</div>
+                <div class="answer-option" data-value="meer-6" onclick="selectAnswer(5, this)">Meer dan 6 uur (lage snelheid, geschikt voor sporadisch gebruik)</div>
+                <div class="answer-option" data-value="weet-niet" onclick="selectAnswer(5, this)">Ik weet het niet</div>
+            </div>
+
+            <div id="step-6" class="step-container">
+                <h2 class="question-title">Wil je een schaalbare batterij?</h2>
+                <div class="answer-option" data-value="zeer-belangrijk" onclick="selectAnswer(6, this)">Zeer belangrijk</div>
+                <div class="answer-option" data-value="belangrijk" onclick="selectAnswer(6, this)">Belangrijk</div>
+                <div class="answer-option" data-value="niet-zo-belangrijk" onclick="selectAnswer(6, this)">Niet zo belangrijk</div>
+                <div class="answer-option" data-value="helemaal-niet-belangrijk" onclick="selectAnswer(6, this)">Helemaal niet belangrijk</div>
+            </div>
+            
+            <div id="step-7" class="step-container">
+                <h2 class="question-title">Hoe belangrijk is integratie met smart home technologie voor jou?</h2>
+                <div class="answer-option" data-value="zeer-belangrijk" onclick="selectAnswer(7, this)">Zeer belangrijk</div>
+                <div class="answer-option" data-value="belangrijk" onclick="selectAnswer(7, this)">Belangrijk</div>
+                <div class="answer-option" data-value="niet-zo-belangrijk" onclick="selectAnswer(7, this)">Niet zo belangrijk</div>
+                <div class="answer-option" data-value="helemaal-niet-belangrijk" onclick="selectAnswer(7, this)">Helemaal niet belangrijk</div>
+            </div>
+
+            <div id="step-8" class="step-container">
+                <h2 class="question-title">Ben je geïnteresseerd in energie-arbitrage?</h2>
+                <div class="answer-option" data-value="zeer-geinteresseerd" onclick="selectAnswer(8, this)">Ja, zeer geïnteresseerd</div>
+                <div class="answer-option" data-value="enigszins-geinteresseerd" onclick="selectAnswer(8, this)">Ja, enigszins geïnteresseerd</div>
+                <div class="answer-option" data-value="niet-geinteresseerd" onclick="selectAnswer(8, this)">Nee, niet geïnteresseerd</div>
+            </div>
+
+            <div id="step-9" class="step-container">
+                <h2 class="question-title">Aantal zonnepanelen:</h2>
+                <input type="number" id="panelenInput" class="input-text" placeholder="Aantal zonnepanelen">
+            </div>
+
+            <div id="step-10" class="step-container">
+                <h2 class="question-title">Wat is je voornaam?</h2>
+                <input type="text" id="voornaamInput" class="input-text" placeholder="Voornaam">
+            </div>
+            
+            <div id="step-11" class="step-container">
+                <h2 class="question-title">Wat is je achternaam?</h2>
+                <input type="text" id="achternaamInput" class="input-text" placeholder="Achternaam">
+            </div>
+
+            <div id="step-12" class="step-container">
+                <h2 class="question-title">Wat is je adres?</h2>
+                <input type="text" id="adresInput" class="input-text" placeholder="bijv. Keizersgracht 123, Amsterdam">
+            </div>
+
+            <div id="resultaat-stap" class="step-container">
+                <h2 class="question-title">Uw advies</h2>
+                <div class="resultaat">
+                    <h2>Aanbevolen batterijcapaciteit</h2>
+                    <p>Uw geschatte totale verbruik is: <span id="totaalVerbruik"></span> kWh</p>
+                    <p>Uw geschatte opbrengst zonnepanelen is: <span id="opbrengstPanelen"></span> kWh</p>
+                    <h3>Geschatte benodigde batterijcapaciteit: <strong id="capaciteitResultaat"></strong></h3>
+                </div>
+                <div id="aanvullendAdvies"></div>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-secondary" id="terugBtn" onclick="prevStep()" style="display:none;">← Terug</button>
+                <button class="btn btn-primary" id="volgendeBtn" onclick="nextStep()" style="display:none;">Volgende →</button>
+            </div>
         </div>
     </div>
 
@@ -247,21 +273,17 @@
             "mega": 9000
         };
 
+        function startCalculator() {
+            document.getElementById('start-page').style.display = 'none';
+            document.getElementById('calculator-container').style.display = 'block';
+            showStep(currentStep);
+        }
+
         function showStep(step) {
             document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
             document.getElementById(`step-${step}`).classList.add('active');
             updateButtons();
             updateProgressBar();
-
-            // Verberg de 'Aantal zonnepanelen' stap als de gebruiker 'Nee' antwoordt
-            if (currentStep === 2) {
-                const answer = formAnswers['step-2'];
-                if (answer === 'nee') {
-                    // Sla de 'Aantal zonnepanelen' stap over en ga naar de volgende
-                    currentStep = 3;
-                    showStep(currentStep);
-                }
-            }
         }
 
         function updateButtons() {
@@ -282,6 +304,11 @@
         }
 
         function nextStep() {
+            if (currentStep === totalSteps) {
+                berekenAdvies();
+                return;
+            }
+
             // Opslaan van de inputvelden
             if (currentStep === 9) {
                 const panelen = document.getElementById('panelenInput').value;
@@ -303,18 +330,26 @@
                 if (!adres) { alert("Vul je adres in."); return; }
                 formAnswers['step-12'] = adres;
             }
-
-            if (currentStep < totalSteps) {
-                currentStep++;
-                showStep(currentStep);
-            } else {
-                berekenAdvies();
+            
+            let skipStep = false;
+            if (currentStep === 2 && formAnswers['step-2'] === 'nee') {
+                currentStep = 9;
+                skipStep = true;
             }
+            
+            if (!skipStep) {
+                currentStep++;
+            }
+            showStep(currentStep);
         }
 
         function prevStep() {
             if (currentStep > 1) {
-                currentStep--;
+                if (currentStep === 9 && formAnswers['step-2'] === 'nee') {
+                    currentStep = 2;
+                } else {
+                    currentStep--;
+                }
                 showStep(currentStep);
             }
         }
@@ -331,8 +366,12 @@
             const verbruik_auto = (formAnswers['step-3'] === "ja") ? 15 : 0;
             const verbruik_warmtepomp = (formAnswers['step-4'] === "ja") ? 10 : 0;
             const opbrengst_per_paneel = 1;
-            const aantal_panelen = (formAnswers['step-2'] === "ja") ? (parseInt(formAnswers['step-9']) || 0) : 0;
-
+            
+            let aantal_panelen = 0;
+            if (formAnswers['step-2'] === "ja") {
+                aantal_panelen = parseInt(formAnswers['step-9']) || 0;
+            }
+            
             const jaarlijksVerbruik = verbruikJaarlijks[formAnswers['step-1']];
             const dagelijksVerbruikHuishouden = jaarlijksVerbruik / 365;
 
@@ -355,9 +394,6 @@
             if (formAnswers['step-8'] === "zeer-geinteresseerd") {
                 aanvullendAdviesHTML += '<li>Een batterij met slimme laad- en ontlaadmogelijkheden is aan te raden voor energie-arbitrage.</li>';
             }
-            if (formAnswers['step-2'] === "ja_extra" || formAnswers['step-2'] === "nee_extra") {
-                aanvullendAdviesHTML += '<li>Investeer in meer zonnepanelen om uw onafhankelijkheid te vergroten en de terugverdientijd te verkorten.</li>';
-            }
             document.getElementById('aanvullendAdvies').innerHTML = aanvullendAdviesHTML + '</ul>';
 
             document.getElementById('terugBtn').style.display = 'none';
@@ -365,8 +401,6 @@
             document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
             document.getElementById('resultaat-stap').classList.add('active');
         }
-
-        showStep(1);
     </script>
 </body>
 </html>
