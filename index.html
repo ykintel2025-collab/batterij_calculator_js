@@ -157,51 +157,67 @@
         </div>
         
         <div id="step-3" class="step-container">
-            <h2 class="question-title">Wat is je adres?</h2>
-            <p>Om jou optimaal van dienst te kunnen zijn, hebben we enkele aanvullende adresgegevens nodig. Vul je volledige adres in.</p>
-            <input type="text" id="adresInput" class="input-text" placeholder="bijv. Keizersgracht 123, Amsterdam">
-        </div>
-
-        <div id="step-4" class="step-container">
-            <h2 class="question-title">Wat is je voornaam?</h2>
-            <input type="text" id="voornaamInput" class="input-text" placeholder="Voornaam">
+            <h2 class="question-title">Heeft u een elektrische auto?</h2>
+            <div class="answer-option" data-value="ja" onclick="selectAnswer(3, this)">Ja</div>
+            <div class="answer-option" data-value="nee" onclick="selectAnswer(3, this)">Nee</div>
         </div>
         
+        <div id="step-4" class="step-container">
+            <h2 class="question-title">Heeft u een warmtepomp?</h2>
+            <div class="answer-option" data-value="ja" onclick="selectAnswer(4, this)">Ja</div>
+            <div class="answer-option" data-value="nee" onclick="selectAnswer(4, this)">Nee</div>
+        </div>
+
         <div id="step-5" class="step-container">
-            <h2 class="question-title">Wat is je achternaam?</h2>
-            <input type="text" id="achternaamInput" class="input-text" placeholder="Achternaam">
+            <h2 class="question-title">Hoe snel wil je dat je batterij oplaadt?</h2>
+            <div class="answer-option" data-value="1-2" onclick="selectAnswer(5, this)">Binnen 1-2 uur (zeer hoge snelheid, geschikt voor intensief gebruik)</div>
+            <div class="answer-option" data-value="2-4" onclick="selectAnswer(5, this)">Binnen 2-4 uur (hoge snelheid, geschikt voor dagelijks gebruik)</div>
+            <div class="answer-option" data-value="4-6" onclick="selectAnswer(5, this)">Binnen 4-6 uur (gemiddelde snelheid, geschikt voor normaal huishoudelijk gebruik)</div>
+            <div class="answer-option" data-value="meer-6" onclick="selectAnswer(5, this)">Meer dan 6 uur (lage snelheid, geschikt voor sporadisch gebruik)</div>
+            <div class="answer-option" data-value="weet-niet" onclick="selectAnswer(5, this)">Ik weet het niet</div>
         </div>
 
         <div id="step-6" class="step-container">
-            <h2 class="question-title">Hoe snel wil je dat je batterij oplaadt?</h2>
-            <div class="answer-option" data-value="1-2" onclick="selectAnswer(6, this)">Binnen 1-2 uur (zeer hoge snelheid, geschikt voor intensief gebruik)</div>
-            <div class="answer-option" data-value="2-4" onclick="selectAnswer(6, this)">Binnen 2-4 uur (hoge snelheid, geschikt voor dagelijks gebruik)</div>
-            <div class="answer-option" data-value="4-6" onclick="selectAnswer(6, this)">Binnen 4-6 uur (gemiddelde snelheid, geschikt voor normaal huishoudelijk gebruik)</div>
-            <div class="answer-option" data-value="meer-6" onclick="selectAnswer(6, this)">Meer dan 6 uur (lage snelheid, geschikt voor sporadisch gebruik)</div>
-            <div class="answer-option" data-value="weet-niet" onclick="selectAnswer(6, this)">Ik weet het niet</div>
-        </div>
-
-        <div id="step-7" class="step-container">
             <h2 class="question-title">Wil je een schaalbare batterij?</h2>
+            <div class="answer-option" data-value="zeer-belangrijk" onclick="selectAnswer(6, this)">Zeer belangrijk</div>
+            <div class="answer-option" data-value="belangrijk" onclick="selectAnswer(6, this)">Belangrijk</div>
+            <div class="answer-option" data-value="niet-zo-belangrijk" onclick="selectAnswer(6, this)">Niet zo belangrijk</div>
+            <div class="answer-option" data-value="helemaal-niet-belangrijk" onclick="selectAnswer(6, this)">Helemaal niet belangrijk</div>
+        </div>
+        
+        <div id="step-7" class="step-container">
+            <h2 class="question-title">Hoe belangrijk is integratie met smart home technologie voor jou?</h2>
             <div class="answer-option" data-value="zeer-belangrijk" onclick="selectAnswer(7, this)">Zeer belangrijk</div>
             <div class="answer-option" data-value="belangrijk" onclick="selectAnswer(7, this)">Belangrijk</div>
             <div class="answer-option" data-value="niet-zo-belangrijk" onclick="selectAnswer(7, this)">Niet zo belangrijk</div>
             <div class="answer-option" data-value="helemaal-niet-belangrijk" onclick="selectAnswer(7, this)">Helemaal niet belangrijk</div>
         </div>
-        
+
         <div id="step-8" class="step-container">
-            <h2 class="question-title">Hoe belangrijk is integratie met smart home technologie voor jou?</h2>
-            <div class="answer-option" data-value="zeer-belangrijk" onclick="selectAnswer(8, this)">Zeer belangrijk</div>
-            <div class="answer-option" data-value="belangrijk" onclick="selectAnswer(8, this)">Belangrijk</div>
-            <div class="answer-option" data-value="niet-zo-belangrijk" onclick="selectAnswer(8, this)">Niet zo belangrijk</div>
-            <div class="answer-option" data-value="helemaal-niet-belangrijk" onclick="selectAnswer(8, this)">Helemaal niet belangrijk</div>
+            <h2 class="question-title">Ben je geïnteresseerd in energie-arbitrage?</h2>
+            <div class="answer-option" data-value="zeer-geinteresseerd" onclick="selectAnswer(8, this)">Ja, zeer geïnteresseerd</div>
+            <div class="answer-option" data-value="enigszins-geinteresseerd" onclick="selectAnswer(8, this)">Ja, enigszins geïnteresseerd</div>
+            <div class="answer-option" data-value="niet-geinteresseerd" onclick="selectAnswer(8, this)">Nee, niet geïnteresseerd</div>
         </div>
 
         <div id="step-9" class="step-container">
-            <h2 class="question-title">Ben je geïnteresseerd in energie-arbitrage?</h2>
-            <div class="answer-option" data-value="zeer-geinteresseerd" onclick="selectAnswer(9, this)">Ja, zeer geïnteresseerd</div>
-            <div class="answer-option" data-value="enigszins-geinteresseerd" onclick="selectAnswer(9, this)">Ja, enigszins geïnteresseerd</div>
-            <div class="answer-option" data-value="niet-geinteresseerd" onclick="selectAnswer(9, this)">Nee, niet geïnteresseerd</div>
+            <h2 class="question-title">Aantal zonnepanelen:</h2>
+            <input type="number" id="panelenInput" class="input-text" placeholder="Aantal zonnepanelen">
+        </div>
+
+        <div id="step-10" class="step-container">
+            <h2 class="question-title">Wat is je voornaam?</h2>
+            <input type="text" id="voornaamInput" class="input-text" placeholder="Voornaam">
+        </div>
+        
+        <div id="step-11" class="step-container">
+            <h2 class="question-title">Wat is je achternaam?</h2>
+            <input type="text" id="achternaamInput" class="input-text" placeholder="Achternaam">
+        </div>
+
+        <div id="step-12" class="step-container">
+            <h2 class="question-title">Wat is je adres?</h2>
+            <input type="text" id="adresInput" class="input-text" placeholder="bijv. Keizersgracht 123, Amsterdam">
         </div>
 
         <div id="resultaat-stap" class="step-container">
@@ -212,6 +228,7 @@
                 <p>Uw geschatte opbrengst zonnepanelen is: <span id="opbrengstPanelen"></span> kWh</p>
                 <h3>Geschatte benodigde batterijcapaciteit: <strong id="capaciteitResultaat"></strong></h3>
             </div>
+            <div id="aanvullendAdvies"></div>
         </div>
 
         <div class="button-container">
@@ -222,7 +239,7 @@
 
     <script>
         let currentStep = 1;
-        const totalSteps = 9;
+        const totalSteps = 12;
         const formAnswers = {};
         const verbruikJaarlijks = {
             "klein": 2000,
@@ -258,12 +275,35 @@
         }
 
         function nextStep() {
-            if (currentStep < totalSteps) {
-                currentStep++;
-                showStep(currentStep);
-            } else {
+            if (currentStep === totalSteps) {
                 berekenAdvies();
+                return;
             }
+
+            // Opslaan van de inputvelden
+            if (currentStep === 9) {
+                const panelen = document.getElementById('panelenInput').value;
+                if (!panelen) { alert("Vul een geldig aantal zonnepanelen in."); return; }
+                formAnswers['step-9'] = panelen;
+            }
+            if (currentStep === 10) {
+                const voornaam = document.getElementById('voornaamInput').value;
+                if (!voornaam) { alert("Vul je voornaam in."); return; }
+                formAnswers['step-10'] = voornaam;
+            }
+            if (currentStep === 11) {
+                const achternaam = document.getElementById('achternaamInput').value;
+                if (!achternaam) { alert("Vul je achternaam in."); return; }
+                formAnswers['step-11'] = achternaam;
+            }
+            if (currentStep === 12) {
+                const adres = document.getElementById('adresInput').value;
+                if (!adres) { alert("Vul je adres in."); return; }
+                formAnswers['step-12'] = adres;
+            }
+
+            currentStep++;
+            showStep(currentStep);
         }
 
         function prevStep() {
@@ -282,21 +322,42 @@
         }
 
         function berekenAdvies() {
-            // Dit is een simpele berekening, maar kan complexer worden gemaakt
-            // Gebaseerd op de jaarlijkse verbruiken, we gebruiken een gemiddelde dag
+            // Basis aannames
+            const verbruik_auto = (formAnswers['step-3'] === "ja") ? 15 : 0;
+            const verbruik_warmtepomp = (formAnswers['step-4'] === "ja") ? 10 : 0;
+            const opbrengst_per_paneel = 1;
+            const aantal_panelen = parseInt(formAnswers['step-9']) || 0;
+
             const jaarlijksVerbruik = verbruikJaarlijks[formAnswers['step-1']];
-            const dagelijksVerbruik = jaarlijksVerbruik / 365;
-            
-            // Dit zijn aannames voor de opbrengst
-            const dagelijkseOpbrengstZonnepanelen = 10; // Dit is een placeholder
-            
-            const nodigUitBatterij = dagelijksVerbruik - dagelijkseOpbrengstZonnepanelen;
+            const dagelijksVerbruikHuishouden = jaarlijksVerbruik / 365;
+
+            // Totale berekening
+            const totaalVerbruik = dagelijksVerbruikHuishouden + verbruik_auto + verbruik_warmtepomp;
+            const opbrengstPanelen = aantal_panelen * opbrengst_per_paneel;
+            const nodigUitBatterij = totaalVerbruik - opbrengstPanelen;
             const batterijCapaciteit = Math.max(0, nodigUitBatterij * 1.2);
 
-            // Toon het resultaat
-            document.getElementById('totaalVerbruik').textContent = dagelijksVerbruik.toFixed(2);
-            document.getElementById('opbrengstPanelen').textContent = dagelijkseOpbrengstZonnepanelen.toFixed(2);
+            // Toon de resultaten
+            document.getElementById('totaalVerbruik').textContent = totaalVerbruik.toFixed(2);
+            document.getElementById('opbrengstPanelen').textContent = opbrengstPanelen.toFixed(2);
             document.getElementById('capaciteitResultaat').textContent = batterijCapaciteit.toFixed(2) + ' kWh';
+            
+            // Creëer aanvullend advies op basis van andere antwoorden
+            let aanvullendAdviesHTML = '<h3>Aanvullende aanbevelingen:</h3><ul>';
+            if (formAnswers['step-6'] === "belangrijk" || formAnswers['step-6'] === "zeer-belangrijk") {
+                aanvullendAdviesHTML += '<li>Overweeg een schaalbare batterij om toekomstige energiebehoeftes op te vangen.</li>';
+            }
+            if (formAnswers['step-7'] === "belangrijk" || formAnswers['step-7'] === "zeer-belangrijk") {
+                aanvullendAdviesHTML += '<li>Kies een batterij met een geavanceerd beheersysteem voor integratie met smart home technologie.</li>';
+            }
+            if (formAnswers['step-8'] === "zeer-geinteresseerd") {
+                aanvullendAdviesHTML += '<li>Een batterij met slimme laad- en ontlaadmogelijkheden is aan te raden voor energie-arbitrage.</li>';
+            }
+            if (formAnswers['step-2'] === "ja_extra" || formAnswers['step-2'] === "nee_extra") {
+                aanvullendAdviesHTML += '<li>Investeer in meer zonnepanelen om uw onafhankelijkheid te vergroten en de terugverdientijd te verkorten.</li>';
+            }
+
+            document.getElementById('aanvullendAdvies').innerHTML = aanvullendAdviesHTML + '</ul>';
 
             document.getElementById('terugBtn').style.display = 'none';
             document.getElementById('volgendeBtn').style.display = 'none';
@@ -304,7 +365,7 @@
             document.getElementById('resultaat-stap').classList.add('active');
         }
 
-        showStep(1); // Start bij de eerste stap
+        showStep(1);
     </script>
 </body>
 </html>
