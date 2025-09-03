@@ -4,46 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thuisbatterij Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Zorgt ervoor dat padding de breedte niet beïnvloedt */
+        }
+        button {
+            background-color: #2980b9;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #3498db;
+        }
+        .resultaat {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            border-left: 5px solid #2980b9;
+        }
+        .resultaat h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .resultaat p {
+            margin: 5px 0;
+        }
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Thuisbatterij Capaciteit Berekenen</h1>
-    <p>Vul hieronder uw geschatte dagelijkse waarden in.</p>
+    <div class="container">
+        <h1>Thuisbatterij Capaciteit Berekenen</h1>
+        <p>Vul hieronder uw geschatte dagelijkse waarden in (in kWh).</p>
 
-    <form id="calculatorForm">
-        <label for="huisverbruik">Geschat dagelijks verbruik van uw huis (kWh):</label><br>
-        <input type="number" id="huisverbruik" name="huisverbruik" value="10" required><br><br>
+        <form id="calculatorForm">
+            <label for="huisverbruik">Geschat dagelijks verbruik van uw huis:</label>
+            <input type="number" id="huisverbruik" name="huisverbruik" value="10" required>
 
-        <label for="autoverbruik">Geschat dagelijks verbruik van uw elektrische auto (kWh):</label><br>
-        <input type="number" id="autoverbruik" name="autoverbruik" value="15" required><br><br>
+            <label for="autoverbruik">Geschat dagelijks verbruik van uw elektrische auto:</label>
+            <input type="number" id="autoverbruik" name="autoverbruik" value="15" required>
 
-        <label for="zonnepanelen">Geschatte dagelijkse opbrengst van uw zonnepanelen (kWh):</label><br>
-        <input type="number" id="zonnepanelen" name="zonnepanelen" value="20" required><br><br>
+            <label for="zonnepanelen">Geschatte dagelijkse opbrengst van uw zonnepanelen:</label>
+            <input type="number" id="zonnepanelen" name="zonnepanelen" value="20" required>
+
+            <label for="extraverbruik">Extra apparaten (bijv. warmtepomp):</label>
+            <input type="number" id="extraverbruik" name="extraverbruik" value="0">
+            
+            <button type="button" onclick="berekenCapaciteit()">Bereken mijn batterijcapaciteit</button>
+        </form>
         
-        <button type="button" onclick="berekenCapaciteit()">Bereken mijn batterijcapaciteit</button>
-    </form>
-    
-    <div id="resultaatDiv" style="display:none;">
-        <hr>
-        <h2>Aanbevolen batterijcapaciteit</h2>
-        <p>De aanbevolen capaciteit voor uw situatie is: <strong id="capaciteitResultaat"></strong></p>
+        <div id="resultaatDiv" class="resultaat" style="display:none;">
+            <h2>Aanbevolen batterijcapaciteit</h2>
+            <p>Totaal dagelijks verbruik: <span id="totaalVerbruik"></span> kWh</p>
+            <p>Opbrengst zonnepanelen: <span id="opbrengstPanelen"></span> kWh</p>
+            <h3>Geschatte benodigde batterijcapaciteit: <strong id="capaciteitResultaat"></strong></h3>
+        </div>
+
+        <p id="errorMelding" class="error" style="display:none;"></p>
     </div>
 
     <script>
         function berekenCapaciteit() {
+            // Verberg de resultaat- en foutmeldingen
+            document.getElementById("resultaatDiv").style.display = "none";
+            document.getElementById("errorMelding").style.display = "none";
+
             const huisverbruik = parseFloat(document.getElementById("huisverbruik").value);
             const autoverbruik = parseFloat(document.getElementById("autoverbruik").value);
             const zonnepanelen = parseFloat(document.getElementById("zonnepanelen").value);
+            const extraverbruik = parseFloat(document.getElementById("extraverbruik").value || 0);
             
-            if (isNaN(huisverbruik) || isNaN(autoverbruik) || isNaN(zonnepanelen)) {
-                alert("Voer geldige getallen in.");
+            if (isNaN(huisverbruik) || isNaN(autoverbruik) || isNaN(zonnepanelen) || isNaN(extraverbruik)) {
+                document.getElementById("errorMelding").textContent = "Voer geldige getallen in.";
+                document.getElementById("errorMelding").style.display = "block";
                 return;
             }
 
-            const totaalVerbruik = huisverbruik + autoverbruik;
+            const totaalVerbruik = huisverbruik + autoverbruik + extraverbruik;
             const nodigUitBatterij = totaalVerbruik - zonnepanelen;
             const batterijCapaciteit = Math.max(0, nodigUitBatterij * 1.2);
             
+            document.getElementById("totaalVerbruik").textContent = totaalVerbruik.toFixed(2);
+            document.getElementById("opbrengstPanelen").textContent = zonnepanelen.toFixed(2);
             document.getElementById("capaciteitResultaat").textContent = batterijCapaciteit.toFixed(2) + " kWh";
             document.getElementById("resultaatDiv").style.display = "block";
         }
