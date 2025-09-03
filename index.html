@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thuisbatterij Calculator</title>
+</head>
+<body>
+
+    <h1>Thuisbatterij Capaciteit Berekenen</h1>
+    <p>Vul hieronder uw geschatte dagelijkse waarden in.</p>
+
+    <form id="calculatorForm">
+        <label for="huisverbruik">Geschat dagelijks verbruik van uw huis (kWh):</label><br>
+        <input type="number" id="huisverbruik" name="huisverbruik" value="10" required><br><br>
+
+        <label for="autoverbruik">Geschat dagelijks verbruik van uw elektrische auto (kWh):</label><br>
+        <input type="number" id="autoverbruik" name="autoverbruik" value="15" required><br><br>
+
+        <label for="zonnepanelen">Geschatte dagelijkse opbrengst van uw zonnepanelen (kWh):</label><br>
+        <input type="number" id="zonnepanelen" name="zonnepanelen" value="20" required><br><br>
+        
+        <button type="button" onclick="berekenCapaciteit()">Bereken mijn batterijcapaciteit</button>
+    </form>
+    
+    <div id="resultaatDiv" style="display:none;">
+        <hr>
+        <h2>Aanbevolen batterijcapaciteit</h2>
+        <p>De aanbevolen capaciteit voor uw situatie is: <strong id="capaciteitResultaat"></strong></p>
+    </div>
+
+    <script>
+        function berekenCapaciteit() {
+            const huisverbruik = parseFloat(document.getElementById("huisverbruik").value);
+            const autoverbruik = parseFloat(document.getElementById("autoverbruik").value);
+            const zonnepanelen = parseFloat(document.getElementById("zonnepanelen").value);
+            
+            if (isNaN(huisverbruik) || isNaN(autoverbruik) || isNaN(zonnepanelen)) {
+                alert("Voer geldige getallen in.");
+                return;
+            }
+
+            const totaalVerbruik = huisverbruik + autoverbruik;
+            const nodigUitBatterij = totaalVerbruik - zonnepanelen;
+            const batterijCapaciteit = Math.max(0, nodigUitBatterij * 1.2);
+            
+            document.getElementById("capaciteitResultaat").textContent = batterijCapaciteit.toFixed(2) + " kWh";
+            document.getElementById("resultaatDiv").style.display = "block";
+        }
+    </script>
+
+</body>
+</html>
