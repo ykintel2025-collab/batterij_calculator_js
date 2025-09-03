@@ -149,11 +149,9 @@
         </div>
 
         <div id="step-2" class="step-container">
-            <h2 class="question-title">Heb je al zonnepanelen?</h2>
-            <div class="answer-option" data-value="ja_geen_extra" onclick="selectAnswer(2, this)">Ja, en ik wil of kan geen extra zonnepanelen plaatsen</div>
-            <div class="answer-option" data-value="ja_extra" onclick="selectAnswer(2, this)">Ja, maar ik ben geïnteresseerd om meer zonnepanelen te plaatsen</div>
-            <div class="answer-option" data-value="nee_geen_extra" onclick="selectAnswer(2, this)">Nee, en ik ben ook niet geïnteresseerd in zonnepanelen</div>
-            <div class="answer-option" data-value="nee_extra" onclick="selectAnswer(2, this)">Nee, maar ik ben wel geïnteresseerd in zonnepanelen</div>
+            <h2 class="question-title">Heeft u al zonnepanelen?</h2>
+            <div class="answer-option" data-value="ja" onclick="selectAnswer(2, this)">Ja</div>
+            <div class="answer-option" data-value="nee" onclick="selectAnswer(2, this)">Nee</div>
         </div>
         
         <div id="step-3" class="step-container">
@@ -258,10 +256,9 @@
 
         function updateButtons() {
             document.getElementById('terugBtn').style.display = currentStep > 1 ? 'block' : 'none';
-            document.getElementById('volgendeBtn').style.display = currentStep < totalSteps ? 'block' : 'none';
+            document.getElementById('volgendeBtn').style.display = 'block';
 
             if (currentStep === totalSteps) {
-                document.getElementById('volgendeBtn').style.display = 'block';
                 document.getElementById('volgendeBtn').textContent = 'Bereken advies';
             } else {
                 document.getElementById('volgendeBtn').textContent = 'Volgende →';
@@ -275,15 +272,10 @@
         }
 
         function nextStep() {
-            if (currentStep === totalSteps) {
-                berekenAdvies();
-                return;
-            }
-
-            // Opslaan van de inputvelden
+            // Sla de input van de huidige stap op, voordat we naar de volgende gaan
             if (currentStep === 9) {
                 const panelen = document.getElementById('panelenInput').value;
-                if (!panelen) { alert("Vul een geldig aantal zonnepanelen in."); return; }
+                if (formAnswers['step-2'] === "ja" && !panelen) { alert("Vul een geldig aantal zonnepanelen in."); return; }
                 formAnswers['step-9'] = panelen;
             }
             if (currentStep === 10) {
@@ -301,14 +293,33 @@
                 if (!adres) { alert("Vul je adres in."); return; }
                 formAnswers['step-12'] = adres;
             }
+            
+            // Logica om stappen over te slaan
+            let skipStep = false;
+            if (currentStep === 2 && formAnswers['step-2'] === 'nee') {
+                currentStep = 9; // Sla de vragen over het aantal zonnepanelen over
+                skipStep = true;
+            }
+            
+            if (currentStep === totalSteps) {
+                berekenAdvies();
+                return;
+            }
 
-            currentStep++;
+            if (!skipStep) {
+                currentStep++;
+            }
             showStep(currentStep);
         }
 
         function prevStep() {
             if (currentStep > 1) {
-                currentStep--;
+                // Logica om stappen terug over te slaan
+                if (currentStep === 9 && formAnswers['step-2'] === 'nee') {
+                    currentStep = 2; // Ga terug naar de zonnepanelen vraag
+                } else {
+                    currentStep--;
+                }
                 showStep(currentStep);
             }
         }
@@ -322,12 +333,17 @@
         }
 
         function berekenAdvies() {
-            // Basis aannames
+            // Aannames voor de berekening
             const verbruik_auto = (formAnswers['step-3'] === "ja") ? 15 : 0;
             const verbruik_warmtepomp = (formAnswers['step-4'] === "ja") ? 10 : 0;
             const opbrengst_per_paneel = 1;
-            const aantal_panelen = parseInt(formAnswers['step-9']) || 0;
-
+            
+            // Haal het aantal zonnepanelen op, rekening houdend met de geskipten stap
+            let aantal_panelen = 0;
+            if (formAnswers['step-2'] === "ja") {
+                aantal_panelen = parseInt(formAnswers['step-9']) || 0;
+            }
+            
             const jaarlijksVerbruik = verbruikJaarlijks[formAnswers['step-1']];
             const dagelijksVerbruikHuishouden = jaarlijksVerbruik / 365;
 
@@ -342,7 +358,6 @@
             document.getElementById('opbrengstPanelen').textContent = opbrengstPanelen.toFixed(2);
             document.getElementById('capaciteitResultaat').textContent = batterijCapaciteit.toFixed(2) + ' kWh';
             
-            // Creëer aanvullend advies op basis van andere antwoorden
             let aanvullendAdviesHTML = '<h3>Aanvullende aanbevelingen:</h3><ul>';
             if (formAnswers['step-6'] === "belangrijk" || formAnswers['step-6'] === "zeer-belangrijk") {
                 aanvullendAdviesHTML += '<li>Overweeg een schaalbare batterij om toekomstige energiebehoeftes op te vangen.</li>';
@@ -353,10 +368,6 @@
             if (formAnswers['step-8'] === "zeer-geinteresseerd") {
                 aanvullendAdviesHTML += '<li>Een batterij met slimme laad- en ontlaadmogelijkheden is aan te raden voor energie-arbitrage.</li>';
             }
-            if (formAnswers['step-2'] === "ja_extra" || formAnswers['step-2'] === "nee_extra") {
-                aanvullendAdviesHTML += '<li>Investeer in meer zonnepanelen om uw onafhankelijkheid te vergroten en de terugverdientijd te verkorten.</li>';
-            }
-
             document.getElementById('aanvullendAdvies').innerHTML = aanvullendAdviesHTML + '</ul>';
 
             document.getElementById('terugBtn').style.display = 'none';
@@ -364,8 +375,8 @@
             document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
             document.getElementById('resultaat-stap').classList.add('active');
         }
-
-        showStep(1);
+        
+        showStep(currentStep); // Start de calculator bij de eerste stap
     </script>
 </body>
 </html>
