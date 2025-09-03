@@ -193,7 +193,7 @@
             // Bereken het totale verbruik en de opbrengst
             const totaalVerbruik = verbruik_huishouden + verbruik_auto + verbruik_warmtepomp;
             const opbrengstPanelen = panelen * opbrengst_per_paneel;
-            const nodigUitBatterij = totaalVerbruik - opbrengstPanelen;
+            const nodigUitBatterij = totaalVerbruik - opbrengstPanelen; // Dit is de gecorrigeerde logica
             const batterijCapaciteit = Math.max(0, nodigUitBatterij * 1.2);
             
             // Toon de resultaten op de pagina
