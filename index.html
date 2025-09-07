@@ -129,25 +129,6 @@
         th {
             background-color: #f2f2f2;
         }
-        /* Nieuwe stijlen voor de startpagina */
-        .start-page {
-            text-align: center;
-            padding-top: 100px;
-        }
-        .start-button {
-            background-color: #27ae60;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-        .start-button:hover {
-            background-color: #2ecc71;
-        }
-        /* Nieuwe stijlen voor productaanbeveling */
         .product-aanbeveling {
             margin-top: 30px;
             padding: 20px;
@@ -172,6 +153,54 @@
         .product-link:hover {
             background-color: #3498db;
         }
+        .chart-container {
+            width: 100%;
+            height: 150px;
+            margin-top: 20px;
+            background-color: #e8f0f8;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .chart-bar-verbruik, .chart-bar-opbrengst {
+            position: absolute;
+            bottom: 0;
+            width: 50%;
+            transition: height 0.5s ease;
+        }
+        .chart-bar-verbruik {
+            background-color: #e74c3c;
+            left: 0;
+        }
+        .chart-bar-opbrengst {
+            background-color: #2ecc71;
+            right: 0;
+        }
+        .chart-label {
+            position: absolute;
+            bottom: -20px;
+            font-size: 0.8rem;
+            color: #555;
+        }
+        .chart-label.verbruik { left: 15%; }
+        .chart-label.opbrengst { right: 15%; }
+        .start-page {
+            text-align: center;
+            padding-top: 100px;
+        }
+        .start-button {
+            background-color: #27ae60;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .start-button:hover {
+            background-color: #2ecc71;
+        }
     </style>
 </head>
 <body>
@@ -189,7 +218,7 @@
             </div>
             <div class="progress-text" id="progressText">0% Voltooid</div>
 
-            <div id="step-1" class="step-container">
+            <div id="step-1" class="step-container active">
                 <h2 class="question-title">Wat is je geschatte jaarlijkse energieverbruik?</h2>
                 <div class="answer-option" data-value="klein" onclick="selectAnswer(1, this)">Tot 2.000 kWh (1 à 2 personen)</div>
                 <div class="answer-option" data-value="gemiddeld" onclick="selectAnswer(1, this)">2.000 - 4.000 kWh (3 personen)</div>
@@ -253,21 +282,6 @@
                 <input type="number" id="panelenInput" class="input-text" placeholder="Aantal zonnepanelen">
             </div>
 
-            <div id="step-10" class="step-container">
-                <h2 class="question-title">Wat is je voornaam?</h2>
-                <input type="text" id="voornaamInput" class="input-text" placeholder="Voornaam">
-            </div>
-            
-            <div id="step-11" class="step-container">
-                <h2 class="question-title">Wat is je achternaam?</h2>
-                <input type="text" id="achternaamInput" class="input-text" placeholder="Achternaam">
-            </div>
-
-            <div id="step-12" class="step-container">
-                <h2 class="question-title">Wat is je adres?</h2>
-                <input type="text" id="adresInput" class="input-text" placeholder="bijv. Keizersgracht 123, Amsterdam">
-            </div>
-
             <div id="resultaat-stap" class="step-container">
                 <h2 class="question-title">Jouw Advies</h2>
                 <div class="resultaat">
@@ -300,7 +314,7 @@
 
     <script>
         let currentStep = 1;
-        const totalSteps = 12;
+        const totalSteps = 10; // Aangepast aantal stappen
         const formAnswers = {};
         const verbruikJaarlijks = {
             "klein": 2000,
@@ -357,25 +371,10 @@
                 if (!panelen) { alert("Vul een geldig aantal zonnepanelen in."); return; }
                 formAnswers['step-9'] = panelen;
             }
-            if (currentStep === 10) {
-                const voornaam = document.getElementById('voornaamInput').value;
-                if (!voornaam) { alert("Vul je voornaam in."); return; }
-                formAnswers['step-10'] = voornaam;
-            }
-            if (currentStep === 11) {
-                const achternaam = document.getElementById('achternaamInput').value;
-                if (!achternaam) { alert("Vul je achternaam in."); return; }
-                formAnswers['step-11'] = achternaam;
-            }
-            if (currentStep === 12) {
-                const adres = document.getElementById('adresInput').value;
-                if (!adres) { alert("Vul je adres in."); return; }
-                formAnswers['step-12'] = adres;
-            }
             
             let skipStep = false;
             if (currentStep === 2 && formAnswers['step-2'] === 'nee') {
-                currentStep = 9;
+                currentStep = 9; // Skip de vragen over de elektrische auto en warmtepomp
                 skipStep = true;
             }
             
@@ -388,7 +387,7 @@
         function prevStep() {
             if (currentStep > 1) {
                 if (currentStep === 9 && formAnswers['step-2'] === 'nee') {
-                    currentStep = 2;
+                    currentStep = 2; // Ga terug naar de zonnepanelen vraag
                 } else {
                     currentStep--;
                 }
@@ -420,9 +419,11 @@
 
             const totaalVerbruik = dagelijksVerbruikHuishouden + verbruik_auto + verbruik_warmtepomp;
             const piekopbrengst_panelen = aantal_panelen * piekopbrengst_per_paneel_kWh;
-            const overschot_kWh = Math.max(0, piekopbrengst_panelen - totaalVerbruik);
-            const batterijCapaciteit = overschot_kWh;
+            let batterijCapaciteit = Math.max(0, piekopbrengst_panelen - totaalVerbruik);
 
+            // Zorg voor een minimale capaciteit van 5 kWh
+            batterijCapaciteit = Math.max(5, batterijCapaciteit);
+            
             document.getElementById('totaalVerbruik').textContent = totaalVerbruik.toFixed(2);
             document.getElementById('opbrengstPanelen').textContent = piekopbrengst_panelen.toFixed(2);
             document.getElementById('capaciteitResultaat').textContent = batterijCapaciteit.toFixed(2) + ' kWh';
@@ -450,13 +451,14 @@
             document.getElementById('volgendeBtn').style.display = 'none';
             document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
             document.getElementById('resultaat-stap').classList.add('active');
-
-            // Product aanbeveling logica
+            
             const aanbevolenProduct = findBestProduct(batterijCapaciteit);
             if (aanbevolenProduct) {
                 document.getElementById('productNaam').textContent = aanbevolenProduct.naam;
                 document.getElementById('productLink').href = aanbevolenProduct.link;
                 document.getElementById('productAanbevelingDiv').style.display = 'block';
+            } else {
+                document.getElementById('productAanbevelingDiv').style.display = 'none';
             }
         }
         
