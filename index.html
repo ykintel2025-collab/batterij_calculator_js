@@ -255,7 +255,7 @@
                         <div class="chart-label verbruik">Verbruik</div>
                         <div class="chart-label opbrengst">Opbrengst</div>
                     </div>
-                    <h3>Aanbevolen batterijcapaciteit: <strong id="capaciteitResultaat"></strong></h3>
+                    <h3>Geschatte benodigde batterijcapaciteit: <strong id="capaciteitResultaat"></strong></h3>
                     <div id="aanvullendAdvies"></div>
                 </div>
             </div>
@@ -395,28 +395,4 @@
             const verbruikHeight = (totaalVerbruik / maxVal) * 100;
             const opbrengstHeight = (piekopbrengst_panelen / maxVal) * 100;
             
-            document.getElementById('chartVerbruik').style.height = `${verbruikHeight}%`;
-            document.getElementById('chartOpbrengst').style.height = `${opbrengstHeight}%`;
-
-            let aanvullendAdviesHTML = '<h3>Aanvullende aanbevelingen:</h3><ul>';
-            if (formAnswers['step-6'] === "belangrijk" || formAnswers['step-6'] === "zeer-belangrijk") {
-                aanvullendAdviesHTML += '<li>Overweeg een schaalbare batterij om toekomstige energiebehoeftes op te vangen.</li>';
-            }
-            if (formAnswers['step-7'] === "belangrijk" || formAnswers['step-7'] === "zeer-belangrijk") {
-                aanvullendAdviesHTML += '<li>Kies een batterij met een geavanceerd beheersysteem voor integratie met smart home technologie.</li>';
-            }
-            if (formAnswers['step-8'] === "zeer-geinteresseerd") {
-                aanvullendAdviesHTML += '<li>Een batterij met slimme laad- en ontlaadmogelijkheden is aan te raden voor energie-arbitrage.</li>';
-            }
-            document.getElementById('aanvullendAdvies').innerHTML = aanvullendAdviesHTML + '</ul>';
-
-            document.getElementById('terugBtn').style.display = 'none';
-            document.getElementById('volgendeBtn').style.display = 'none';
-            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
-            document.getElementById('resultaat-stap').classList.add('active');
-        }
-        
-        showStep(currentStep);
-    </script>
-</body>
-</html>
+            document.getElementById('chartVerbruik').style.height = `${verbruikHeight
