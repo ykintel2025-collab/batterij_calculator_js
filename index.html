@@ -4,37 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thuisbatterij Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f4f8;
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f9;
             color: #333;
+            line-height: 1.6;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            padding: 20px;
         }
         .container {
-            max-width: 700px;
-            width: 90%;
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .logo {
-            width: 80px;
-            margin-bottom: 20px;
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         h1 {
-            color: #1e3a5f;
-            font-size: 2.5rem;
-            margin-top: 0;
+            color: #2c3e50;
+            text-align: center;
         }
         .step-container {
             display: none;
@@ -43,186 +32,107 @@
             display: block;
         }
         .question-title {
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
             margin-bottom: 20px;
-            color: #1e3a5f;
         }
         .answer-option {
-            border: 2px solid #e0e6ed;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            text-align: left;
+            transition: background-color 0.3s;
         }
         .answer-option:hover {
-            border-color: #3498db;
-            background-color: #f9fcff;
+            background-color: #f0f0f0;
         }
         .answer-option.selected {
-            border-color: #2ecc71;
-            background-color: #eaf9ed;
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
-        }
-        .answer-option .icon {
-            font-size: 2rem;
-            color: #1e3a5f;
-            margin-right: 15px;
-            display: inline-block;
-            width: 30px;
-            text-align: center;
+            background-color: #e6f3ff;
+            border-color: #007bff;
         }
         .button-container {
             display: flex;
             justify-content: space-between;
-            margin-top: 30px;
+            margin-top: 20px;
         }
         .btn {
-            padding: 15px 30px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 50px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
+            font-size: 16px;
         }
         .btn-primary {
-            background-color: #3498db;
+            background-color: #2980b9;
             color: white;
         }
-        .btn-primary:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
         .btn-secondary {
-            background-color: #e0e6ed;
-            color: #555;
-        }
-        .btn-secondary:hover {
-            background-color: #c9d0d8;
-            transform: translateY(-2px);
+            background-color: #bdc3c7;
+            color: #333;
         }
         .input-text {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             margin-bottom: 15px;
-            border: 2px solid #e0e6ed;
-            border-radius: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             box-sizing: border-box;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        .input-text:focus {
-            outline: none;
-            border-color: #3498db;
         }
         .progress-bar-container {
-            background-color: #e0e6ed;
-            border-radius: 50px;
-            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
             margin-bottom: 20px;
         }
         .progress-bar {
-            height: 100%;
-            background-color: #2ecc71;
-            border-radius: 50px;
+            height: 10px;
+            background-color: #27ae60;
+            border-radius: 5px;
             transition: width 0.4s ease;
         }
         .progress-text {
             text-align: center;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            color: #555;
+            font-size: 14px;
+            margin-bottom: 5px;
         }
         .resultaat {
-            background-color: #f9fbfd;
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 30px;
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
             text-align: center;
-            border-left: 5px solid #2ecc71;
+            border-left: 5px solid #2980b9;
         }
         .resultaat h2 {
             margin-top: 0;
-            color: #1e3a5f;
-            font-size: 1.5rem;
+            color: #2c3e50;
         }
         .resultaat p {
-            margin: 8px 0;
-            font-size: 1rem;
-            color: #555;
+            margin: 5px 0;
         }
         .error {
             color: #e74c3c;
             text-align: center;
-            margin-top: 15px;
+            margin-top: 10px;
         }
-        .chart-container-summary {
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
-            height: 150px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
-            background-color: #e8f0f8;
-            border-radius: 8px;
-            padding: 10px 0;
-            position: relative;
         }
-        .summary-bar {
-            width: 30%;
-            background-color: #3498db;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.9rem;
-            font-weight: bold;
-            border-radius: 5px 5px 0 0;
-            transition: height 0.5s ease;
-            position: relative;
-        }
-        .summary-bar.verbruik { background-color: #e74c3c; }
-        .summary-bar.opbrengst { background-color: #2ecc71; }
-        .summary-bar-label {
-            position: absolute;
-            bottom: -25px;
-            color: #555;
-            font-size: 0.8rem;
-        }
-        .product-aanbeveling {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #f9fbfd;
-            border-radius: 8px;
-            border: 1px solid #e0e6ed;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
             text-align: left;
         }
-        .product-aanbeveling h3 {
-            color: #1e3a5f;
-            margin-top: 0;
+        th {
+            background-color: #f2f2f2;
         }
-        .product-link {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #2980b9;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        .product-link:hover {
-            background-color: #3498db;
-        }
+        /* Nieuwe stijlen voor de startpagina */
         .start-page {
             text-align: center;
-            padding-top: 0;
+            padding-top: 100px;
         }
         .start-button {
             background-color: #27ae60;
@@ -237,17 +147,303 @@
         .start-button:hover {
             background-color: #2ecc71;
         }
-        #energyChart {
-            margin-top: 30px;
-            background-color: #f9fbfd;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #e0e6ed;
-        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="start-page" class="step-container active">
-            <img src="https://via.
+    <div id="start-page" class="start-page">
+        <h1>Welkom bij de Thuisbatterij Calculator</h1>
+        <p>Start de calculator om een persoonlijk advies te ontvangen.</p>
+        <button class="start-button" onclick="startCalculator()">Start</button>
+    </div>
+
+    <div id="calculator-container" style="display:none;">
+        <div class="container">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText">0% Voltooid</div>
+
+            <div id="step-1" class="step-container active">
+                <h2 class="question-title">Wat is je geschatte jaarlijkse energieverbruik?</h2>
+                <div class="answer-option" data-value="klein" onclick="selectAnswer(1, this)">Tot 2.000 kWh (1 à 2 personen)</div>
+                <div class="answer-option" data-value="gemiddeld" onclick="selectAnswer(1, this)">2.000 - 4.000 kWh (3 personen)</div>
+                <div class="answer-option" data-value="groot" onclick="selectAnswer(1, this)">4.000 - 6.000 kWh (4 personen)</div>
+                <div class="answer-option" data-value="zeer_groot" onclick="selectAnswer(1, this)">6.000 - 8.000 kWh (5 personen)</div>
+                <div class="answer-option" data-value="mega" onclick="selectAnswer(1, this)">8.000 - 10.000 kWh (6+ personen)</div>
+            </div>
+
+            <div id="step-2" class="step-container">
+                <h2 class="question-title">Heeft u al zonnepanelen?</h2>
+                <div class="answer-option" data-value="ja" onclick="selectAnswer(2, this)">Ja</div>
+                <div class="answer-option" data-value="nee" onclick="selectAnswer(2, this)">Nee</div>
+            </div>
+            
+            <div id="step-3" class="step-container">
+                <h2 class="question-title">Heeft u een elektrische auto?</h2>
+                <div class="answer-option" data-value="ja" onclick="selectAnswer(3, this)">Ja</div>
+                <div class="answer-option" data-value="nee" onclick="selectAnswer(3, this)">Nee</div>
+            </div>
+            
+            <div id="step-4" class="step-container">
+                <h2 class="question-title">Heeft u een warmtepomp?</h2>
+                <div class="answer-option" data-value="ja" onclick="selectAnswer(4, this)">Ja</div>
+                <div class="answer-option" data-value="nee" onclick="selectAnswer(4, this)">Nee</div>
+            </div>
+
+            <div id="step-5" class="step-container">
+                <h2 class="question-title">Hoe snel wil je dat je batterij oplaadt?</h2>
+                <div class="answer-option" data-value="1-2" onclick="selectAnswer(5, this)">Binnen 1-2 uur (zeer hoge snelheid, geschikt voor intensief gebruik)</div>
+                <div class="answer-option" data-value="2-4" onclick="selectAnswer(5, this)">Binnen 2-4 uur (hoge snelheid, geschikt voor dagelijks gebruik)</div>
+                <div class="answer-option" data-value="4-6" onclick="selectAnswer(5, this)">Binnen 4-6 uur (gemiddelde snelheid, geschikt voor normaal huishoudelijk gebruik)</div>
+                <div class="answer-option" data-value="meer-6" onclick="selectAnswer(5, this)">Meer dan 6 uur (lage snelheid, geschikt voor sporadisch gebruik)</div>
+                <div class="answer-option" data-value="weet-niet" onclick="selectAnswer(5, this)">Ik weet het niet</div>
+            </div>
+
+            <div id="step-6" class="step-container">
+                <h2 class="question-title">Wil je een schaalbare batterij?</h2>
+                <div class="answer-option" data-value="zeer-belangrijk" onclick="selectAnswer(6, this)">Zeer belangrijk</div>
+                <div class="answer-option" data-value="belangrijk" onclick="selectAnswer(6, this)">Belangrijk</div>
+                <div class="answer-option" data-value="niet-zo-belangrijk" onclick="selectAnswer(6, this)">Niet zo belangrijk</div>
+                <div class="answer-option" data-value="helemaal-niet-belangrijk" onclick="selectAnswer(6, this)">Helemaal niet belangrijk</div>
+            </div>
+            
+            <div id="step-7" class="step-container">
+                <h2 class="question-title">Hoe belangrijk is integratie met smart home technologie voor jou?</h2>
+                <div class="answer-option" data-value="zeer-belangrijk" onclick="selectAnswer(7, this)">Zeer belangrijk</div>
+                <div class="answer-option" data-value="belangrijk" onclick="selectAnswer(7, this)">Belangrijk</div>
+                <div class="answer-option" data-value="niet-zo-belangrijk" onclick="selectAnswer(7, this)">Niet zo belangrijk</div>
+                <div class="answer-option" data-value="helemaal-niet-belangrijk" onclick="selectAnswer(7, this)">Helemaal niet belangrijk</div>
+            </div>
+
+            <div id="step-8" class="step-container">
+                <h2 class="question-title">Ben je geïnteresseerd in energie-arbitrage?</h2>
+                <div class="answer-option" data-value="zeer-geinteresseerd" onclick="selectAnswer(8, this)">Ja, zeer geïnteresseerd</div>
+                <div class="answer-option" data-value="enigszins-geinteresseerd" onclick="selectAnswer(8, this)">Ja, enigszins geïnteresseerd</div>
+                <div class="answer-option" data-value="niet-geinteresseerd" onclick="selectAnswer(8, this)">Nee, niet geïnteresseerd</div>
+            </div>
+
+            <div id="step-9" class="step-container">
+                <h2 class="question-title">Aantal zonnepanelen:</h2>
+                <input type="number" id="panelenInput" class="input-text" placeholder="Aantal zonnepanelen">
+            </div>
+
+            <div id="resultaat-stap" class="step-container">
+                <h2 class="question-title">Jouw Advies</h2>
+                <div class="resultaat">
+                    <h2>Aanbevolen batterijcapaciteit</h2>
+                    <p>Jouw geschatte dagelijkse verbruik: <span id="totaalVerbruik"></span> kWh</p>
+                    <p>Jouw geschatte zonne-opbrengst: <span id="opbrengstPanelen"></span> kWh</p>
+                    <div class="chart-container">
+                        <div class="chart-bar-verbruik" id="chartVerbruik"></div>
+                        <div class="chart-bar-opbrengst" id="chartOpbrengst"></div>
+                        <div class="chart-label verbruik">Verbruik</div>
+                        <div class="chart-label opbrengst">Opbrengst</div>
+                    </div>
+                    <h3>Geschatte benodigde batterijcapaciteit: <strong id="capaciteitResultaat"></strong></h3>
+                    <div id="aanvullendAdvies"></div>
+                </div>
+            </div>
+            
+            <div class="product-aanbeveling" id="productAanbevelingDiv" style="display:none;">
+                <h3>Aanbevolen product:</h3>
+                <p id="productNaam"></p>
+                <a href="#" id="productLink" class="product-link" target="_blank">Bekijk product</a>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-secondary" id="terugBtn" onclick="prevStep()" style="display:none;">← Terug</button>
+                <button class="btn btn-primary" id="volgendeBtn" onclick="nextStep()" style="display:none;">Volgende →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 9;
+        const formAnswers = {};
+        const verbruikJaarlijks = {
+            "klein": 2000,
+            "gemiddeld": 3000,
+            "groot": 5000,
+            "zeer_groot": 7000,
+            "mega": 9000
+        };
+        const products = [
+            { naam: "Basis Batterij 5 kWh", capaciteit: 5, link: "https://example.com/product/5kwh" },
+            { naam: "Standaard Batterij 10 kWh", capaciteit: 10, link: "https://example.com/product/10kwh" },
+            { naam: "Premium Batterij 15 kWh", capaciteit: 15, link: "https://example.com/product/15kwh" },
+            { naam: "Grootverbruiker Batterij 20 kWh", capaciteit: 20, link: "https://example.com/product/20kwh" },
+        ];
+
+        function startCalculator() {
+            document.getElementById('start-page').style.display = 'none';
+            document.getElementById('calculator-container').style.display = 'block';
+            showStep(currentStep);
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+            const stepElement = document.getElementById(`step-${step}`);
+            if (stepElement) {
+                stepElement.classList.add('active');
+            } else if (step > totalSteps) {
+                document.getElementById('resultaat-stap').classList.add('active');
+            }
+            updateButtons();
+            updateProgressBar();
+        }
+
+        function updateButtons() {
+            document.getElementById('terugBtn').style.display = currentStep > 1 && currentStep <= totalSteps ? 'block' : 'none';
+            document.getElementById('volgendeBtn').style.display = currentStep <= totalSteps ? 'block' : 'none';
+
+            if (currentStep === totalSteps) {
+                document.getElementById('volgendeBtn').textContent = 'Bereken advies';
+            } else {
+                document.getElementById('volgendeBtn').textContent = 'Volgende →';
+            }
+        }
+        
+        function updateProgressBar() {
+            let percentage;
+            if (currentStep > totalSteps) {
+                percentage = 100;
+            } else {
+                percentage = ((currentStep - 1) / totalSteps) * 100;
+            }
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+            document.getElementById('progressText').textContent = `${Math.round(percentage)}% Voltooid`;
+        }
+
+        function nextStep() {
+            if (currentStep > totalSteps) {
+                berekenAdvies();
+                return;
+            }
+
+            const currentStepElement = document.getElementById(`step-${currentStep}`);
+            const selectedOption = currentStepElement.querySelector('.selected');
+            if (currentStep !== 9 && !selectedOption) {
+                alert("Selecteer een optie om verder te gaan.");
+                return;
+            }
+            
+            if (selectedOption) {
+                formAnswers[`step-${currentStep}`] = selectedOption.dataset.value;
+            }
+
+            if (currentStep === 9) {
+                const panelen = document.getElementById('panelenInput').value;
+                if (formAnswers['step-2'] === 'ja' && (!panelen || isNaN(panelen) || parseInt(panelen) < 0)) {
+                    alert("Vul een geldig aantal zonnepanelen in.");
+                    return;
+                }
+                formAnswers['step-9'] = parseInt(panelen) || 0;
+            }
+
+            if (currentStep === totalSteps) {
+                berekenAdvies();
+            } else {
+                let skipStep = false;
+                if (currentStep === 2 && formAnswers['step-2'] === 'nee') {
+                    currentStep = 9;
+                    skipStep = true;
+                }
+                
+                if (!skipStep) {
+                    currentStep++;
+                }
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                if (currentStep === 9 && formAnswers['step-2'] === 'nee') {
+                    currentStep = 2;
+                } else {
+                    currentStep--;
+                }
+                showStep(currentStep);
+            }
+        }
+
+        function selectAnswer(step, element) {
+            const container = document.getElementById(`step-${step}`);
+            container.querySelectorAll('.answer-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function berekenAdvies() {
+            const verbruik_auto_dagelijks = (formAnswers['step-3'] === "ja") ? 15 : 0;
+            const verbruik_warmtepomp_dagelijks = (formAnswers['step-4'] === "ja") ? 10 : 0;
+            const opbrengst_per_paneel_kWh = 2;
+            const piekopbrengst_per_paneel_kWh = 4;
+            
+            let aantal_panelen = 0;
+            if (formAnswers['step-2'] === "ja") {
+                aantal_panelen = formAnswers['step-9'];
+            }
+            
+            const jaarlijksVerbruik = verbruikJaarlijks[formAnswers['step-1']];
+            const dagelijksVerbruikHuishouden = jaarlijksVerbruik / 365;
+
+            const totaalDagelijksVerbruik = dagelijksVerbruikHuishouden + verbruik_auto_dagelijks + verbruik_warmtepomp_dagelijks;
+            const opbrengstPanelen = aantal_panelen * opbrengst_per_paneel_kWh;
+            let batterijCapaciteit = Math.max(5, (opbrengstPanelen - totaalDagelijksVerbruik));
+            
+            document.getElementById('totaalVerbruik').textContent = totaalDagelijksVerbruik.toFixed(2);
+            document.getElementById('opbrengstPanelen').textContent = opbrengstPanelen.toFixed(2);
+            document.getElementById('capaciteitResultaat').textContent = batterijCapaciteit.toFixed(2) + ' kWh';
+            
+            const maxValSummary = Math.max(totaalDagelijksVerbruik, opbrengstPanelen, 1);
+            document.getElementById('summaryBarVerbruik').style.height = `${(totaalDagelijksVerbruik / maxValSummary) * 90}%`;
+            document.getElementById('summaryBarOpbrengst').style.height = `${(opbrengstPanelen / maxValSummary) * 90}%`;
+            
+            let aanvullendAdviesHTML = '<h3>Aanvullende aanbevelingen:</h3><ul>';
+            if (formAnswers['step-6'] === "belangrijk" || formAnswers['step-6'] === "zeer-belangrijk") {
+                aanvullendAdviesHTML += '<li>Overweeg een schaalbare batterij om toekomstige energiebehoeftes op te vangen.</li>';
+            }
+            if (formAnswers['step-7'] === "belangrijk" || formAnswers['step-7'] === "zeer-belangrijk") {
+                aanvullendAdviesHTML += '<li>Kies een batterij met een geavanceerd beheersysteem voor integratie met smart home technologie.</li>';
+            }
+            if (formAnswers['step-8'] === "zeer-geinteresseerd") {
+                aanvullendAdviesHTML += '<li>Een batterij met slimme laad- en ontlaadmogelijkheden is aan te raden voor energie-arbitrage.</li>';
+            }
+            document.getElementById('aanvullendAdvies').innerHTML = aanvullendAdviesHTML + '</ul>';
+
+            document.getElementById('terugBtn').style.display = 'none';
+            document.getElementById('volgendeBtn').style.display = 'none';
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+            document.getElementById('resultaat-stap').classList.add('active');
+            
+            const aanbevolenProduct = findBestProduct(batterijCapaciteit);
+            if (aanbevolenProduct) {
+                document.getElementById('productNaam').textContent = aanbevolenProduct.naam;
+                document.getElementById('productLink').href = aanbevolenProduct.link;
+                document.getElementById('productAanbevelingDiv').style.display = 'block';
+            } else {
+                document.getElementById('productAanbevelingDiv').style.display = 'none';
+            }
+
+            renderDailyEnergyChart(totaalDagelijksVerbruik, opbrengstPanelen, batterijCapaciteit);
+            updateProgressBar();
+        }
+
+        function findBestProduct(capaciteit) {
+            let bestProduct = null;
+            let minDifference = Infinity;
+
+            for (const product of products) {
+                const difference = Math.abs(capaciteit - product.capaciteit);
+                if (difference < minDifference) {
+                    minDifference = difference;
+                    bestProduct = product;
+                }
+            }
+            return bestProduct;
+        }
+
+        function renderDailyEnergyChart(dagelijksVerbruik, dagelijkseZonneOpbrengst, batterijCapaciteit) {
+            const ctx = document.getElementById('dailyEnergyChartCanvas').getContext('2d');
