@@ -173,12 +173,9 @@
         }
 
         function nextStep() {
-            if (currentStep > totalSteps) {
-                return;
-            }
-
             const currentStepElement = document.getElementById(`step-${currentStep}`);
             const selectedOption = currentStepElement.querySelector('.selected');
+
             if (currentStep !== 9 && !selectedOption) {
                 alert("Selecteer een optie om verder te gaan.");
                 return;
@@ -310,7 +307,7 @@
             const geschaaldVerbruikProfiel = verbruikProfiel.map(val => val * schaalVerbruik);
 
             const totaalZonneOpbrengstProfiel = zonneOpbrengstProfiel.reduce((a, b) => a + b, 0);
-            const schaalZon = (totaalZonneOpbrengstProfiel > 0) ? dagelijkseZonneOpbrengst / totaalZonneOpbrengstProfiel : 0;
+            const schaalZon = (totaalZonneOpbrengstProfiel > 0) ? dagelijksZonneOpbrengst / totaalZonneOpbrengstProfiel : 0;
             const geschaaldeZonneOpbrengstProfiel = zonneOpbrengstProfiel.map(val => val * schaalZon);
 
             const batterijInbrengProfiel = new Array(24).fill(0);
@@ -408,9 +405,19 @@
         }
         
         document.addEventListener('DOMContentLoaded', (event) => {
-            // Roep de startCalculator functie aan bij het laden van de pagina
-            startCalculator();
+            const startButton = document.querySelector('.start-button');
+            if (startButton) {
+                startButton.addEventListener('click', startCalculator);
+            }
         });
+
+        // Roep showStep aan om de eerste stap te tonen als de startpagina niet actief is.
+        // Dit zorgt ervoor dat de pagina niet blanco is als de startpagina-logica ontbreekt.
+        if (document.getElementById('start-page') && !document.getElementById('start-page').classList.contains('active')) {
+            showStep(currentStep);
+        } else if (!document.getElementById('start-page')) {
+            showStep(currentStep);
+        }
     </script>
 </body>
 </html>
