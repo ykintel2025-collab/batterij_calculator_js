@@ -1,0 +1,217 @@
+/* Algemene styling voor de body en containers */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f4f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.container {
+    max-width: 700px;
+    width: 90%;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    text-align: center;
+}
+.logo {
+    width: 80px;
+    margin-bottom: 20px;
+}
+h1 {
+    color: #1e3a5f;
+    font-size: 2.5rem;
+    margin-top: 0;
+}
+.question-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1e3a5f;
+}
+
+/* Styling voor de stappen */
+.step-container {
+    display: none;
+}
+.step-container.active {
+    display: block;
+}
+.answer-option {
+    border: 2px solid #e0e6ed;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    text-align: left;
+}
+.answer-option:hover {
+    border-color: #3498db;
+    background-color: #f9fcff;
+}
+.answer-option.selected {
+    border-color: #2ecc71;
+    background-color: #eaf9ed;
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+}
+.answer-option .icon {
+    font-size: 2rem;
+    color: #1e3a5f;
+    margin-right: 15px;
+    display: inline-block;
+    width: 30px;
+    text-align: center;
+}
+.input-text {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #e0e6ed;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+.input-text:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* Styling voor de knoppen en voortgangsbalk */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+.btn {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+.btn-secondary {
+    background-color: #e0e6ed;
+    color: #555;
+}
+.btn-secondary:hover {
+    background-color: #c9d0d8;
+    transform: translateY(-2px);
+}
+.progress-bar-container {
+    background-color: #e0e6ed;
+    border-radius: 50px;
+    height: 10px;
+    margin-bottom: 20px;
+}
+.progress-bar {
+    height: 100%;
+    background-color: #2ecc71;
+    border-radius: 50px;
+    transition: width 0.4s ease;
+}
+.progress-text {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Styling voor de resultatenpagina */
+.resultaat {
+    background-color: #f9fbfd;
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 30px;
+    text-align: center;
+    border-left: 5px solid #2ecc71;
+}
+.resultaat h2 {
+    margin-top: 0;
+    color: #1e3a5f;
+    font-size: 1.5rem;
+}
+.resultaat p {
+    margin: 8px 0;
+    font-size: 1rem;
+    color: #555;
+}
+.product-aanbeveling {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9fbfd;
+    border-radius: 8px;
+    border: 1px solid #e0e6ed;
+    text-align: left;
+}
+.product-aanbeveling h3 {
+    color: #1e3a5f;
+    margin-top: 0;
+}
+.product-link {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #2980b9;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+.product-link:hover {
+    background-color: #3498db;
+}
+
+/* Grafiek styling */
+#energyChart {
+    margin-top: 30px;
+    background-color: #f9fbfd;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e0e6ed;
+}
+
+/* Startpagina styling */
+.start-page-body {
+    text-align: center;
+}
+.start-page-container {
+    padding-top: 0;
+}
+.btn-start {
+    background-color: #27ae60;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-top: 30px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s, transform 0.3s;
+}
+.btn-start:hover {
+    background-color: #2ecc71;
+    transform: translateY(-2px);
+}
