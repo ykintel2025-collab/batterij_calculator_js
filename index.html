@@ -277,4 +277,285 @@
         ];
 
         function startCalculator() {
-            document.
+            document.getElementById('start-page').style.display = 'none';
+            document.getElementById('calculator-container').style.display = 'block';
+            showStep(currentStep);
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+            const stepElement = document.getElementById(`step-${step}`);
+            if (stepElement) {
+                stepElement.classList.add('active');
+            } else if (step > totalSteps) {
+                document.getElementById('resultaat-stap').classList.add('active');
+            }
+            updateButtons();
+            updateProgressBar();
+        }
+
+        function updateButtons() {
+            document.getElementById('terugBtn').style.display = currentStep > 1 && currentStep <= totalSteps ? 'block' : 'none';
+            document.getElementById('volgendeBtn').style.display = 'block';
+
+            if (currentStep === totalSteps) {
+                document.getElementById('volgendeBtn').textContent = 'Bereken advies';
+            } else {
+                document.getElementById('volgendeBtn').textContent = 'Volgende →';
+            }
+        }
+        
+        function updateProgressBar() {
+            let percentage;
+            if (currentStep > totalSteps) {
+                percentage = 100;
+            } else {
+                percentage = ((currentStep - 1) / totalSteps) * 100;
+            }
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+            document.getElementById('progressText').textContent = `${Math.round(percentage)}% Voltooid`;
+        }
+
+        function nextStep() {
+            if (currentStep === totalSteps) {
+                berekenAdvies();
+                return;
+            }
+
+            const currentStepElement = document.getElementById(`step-${currentStep}`);
+            const selectedOption = currentStepElement.querySelector('.selected');
+            if (currentStep !== 9 && !selectedOption) {
+                alert("Selecteer een optie om verder te gaan.");
+                return;
+            }
+            
+            if (selectedOption) {
+                formAnswers[`step-${currentStep}`] = selectedOption.dataset.value;
+            }
+
+            if (currentStep === 9) {
+                const panelen = document.getElementById('panelenInput').value;
+                if (formAnswers['step-2'] === 'ja' && (!panelen || isNaN(panelen) || parseInt(panelen) < 0)) {
+                    alert("Vul een geldig aantal zonnepanelen in.");
+                    return;
+                }
+                formAnswers['step-9'] = parseInt(panelen) || 0;
+            }
+
+            if (currentStep === totalSteps) {
+                berekenAdvies();
+            } else {
+                let skipStep = false;
+                if (currentStep === 2 && formAnswers['step-2'] === 'nee') {
+                    currentStep = 9;
+                    skipStep = true;
+                }
+                
+                if (!skipStep) {
+                    currentStep++;
+                }
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                if (currentStep === 9 && formAnswers['step-2'] === 'nee') {
+                    currentStep = 2;
+                } else {
+                    currentStep--;
+                }
+                showStep(currentStep);
+            }
+        }
+
+        function selectAnswer(step, element) {
+            const container = document.getElementById(`step-${step}`);
+            container.querySelectorAll('.answer-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function berekenAdvies() {
+            const verbruik_auto_dagelijks = (formAnswers['step-3'] === "ja") ? 15 : 0;
+            const verbruik_warmtepomp_dagelijks = (formAnswers['step-4'] === "ja") ? 10 : 0;
+            const opbrengst_per_paneel_kWh = 2;
+            const piekopbrengst_per_paneel_kWh = 4;
+            
+            let aantal_panelen = 0;
+            if (formAnswers['step-2'] === "ja") {
+                aantal_panelen = formAnswers['step-9'];
+            }
+            
+            const jaarlijksVerbruik = verbruikJaarlijks[formAnswers['step-1']];
+            const dagelijksVerbruikHuishouden = jaarlijksVerbruik / 365;
+
+            const totaalDagelijksVerbruik = dagelijksVerbruikHuishouden + verbruik_auto_dagelijks + verbruik_warmtepomp_dagelijks;
+            const opbrengstPanelen = aantal_panelen * opbrengst_per_paneel_kWh;
+            let batterijCapaciteit = Math.max(5, (opbrengstPanelen - totaalDagelijksVerbruik));
+            
+            document.getElementById('totaalVerbruik').textContent = totaalDagelijksVerbruik.toFixed(2);
+            document.getElementById('opbrengstPanelen').textContent = opbrengstPanelen.toFixed(2);
+            document.getElementById('capaciteitResultaat').textContent = batterijCapaciteit.toFixed(2) + ' kWh';
+            
+            const maxValSummary = Math.max(totaalDagelijksVerbruik, opbrengstPanelen, 1);
+            document.getElementById('summaryBarVerbruik').style.height = `${(totaalDagelijksVerbruik / maxValSummary) * 90}%`;
+            document.getElementById('summaryBarOpbrengst').style.height = `${(opbrengstPanelen / maxValSummary) * 90}%`;
+            
+            let aanvullendAdviesHTML = '<h3>Aanvullende aanbevelingen:</h3><ul>';
+            if (formAnswers['step-6'] === "belangrijk" || formAnswers['step-6'] === "zeer-belangrijk") {
+                aanvullendAdviesHTML += '<li>Overweeg een schaalbare batterij om toekomstige energiebehoeftes op te vangen.</li>';
+            }
+            if (formAnswers['step-7'] === "belangrijk" || formAnswers['step-7'] === "zeer-belangrijk") {
+                aanvullendAdviesHTML += '<li>Kies een batterij met een geavanceerd beheersysteem voor integratie met smart home technologie.</li>';
+            }
+            if (formAnswers['step-8'] === "zeer-geinteresseerd") {
+                aanvullendAdviesHTML += '<li>Een batterij met slimme laad- en ontlaadmogelijkheden is aan te raden voor energie-arbitrage.</li>';
+            }
+            document.getElementById('aanvullendAdvies').innerHTML = aanvullendAdviesHTML + '</ul>';
+
+            document.getElementById('terugBtn').style.display = 'none';
+            document.getElementById('volgendeBtn').style.display = 'none';
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+            document.getElementById('resultaat-stap').classList.add('active');
+            
+            const aanbevolenProduct = findBestProduct(batterijCapaciteit);
+            if (aanbevolenProduct) {
+                document.getElementById('productNaam').textContent = aanbevolenProduct.naam;
+                document.getElementById('productLink').href = aanbevolenProduct.link;
+                document.getElementById('productAanbevelingDiv').style.display = 'block';
+            } else {
+                document.getElementById('productAanbevelingDiv').style.display = 'none';
+            }
+
+            // Oproepen van de grafiek na de berekening
+            renderDailyEnergyChart(totaalDagelijksVerbruik, opbrengstPanelen, batterijCapaciteit);
+            updateProgressBar();
+        }
+
+        function findBestProduct(capaciteit) {
+            let bestProduct = null;
+            let minDifference = Infinity;
+
+            for (const product of products) {
+                const difference = Math.abs(capaciteit - product.capaciteit);
+                if (difference < minDifference) {
+                    minDifference = difference;
+                    bestProduct = product;
+                }
+            }
+            return bestProduct;
+        }
+
+        function renderDailyEnergyChart(dagelijksVerbruik, dagelijkseZonneOpbrengst, batterijCapaciteit) {
+            const ctx = document.getElementById('dailyEnergyChartCanvas').getContext('2d');
+            const verbruikProfiel = [0.5, 0.4, 0.3, 0.3, 0.4, 0.6, 1.2, 1.5, 1.0, 0.8, 0.7, 0.7, 0.8, 0.9, 1.0, 1.1, 1.3, 1.8, 2.5, 2.0, 1.5, 1.2, 1.0, 0.8];
+            const zonneOpbrengstProfiel = [0, 0, 0, 0, 0, 0, 0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 2.8, 2.5, 2.0, 1.5, 1.0, 0.5, 0.1, 0, 0, 0, 0, 0];
+            const totaalVerbruikProfiel = verbruikProfiel.reduce((a, b) => a + b, 0);
+            const schaalVerbruik = dagelijksVerbruik / totaalVerbruikProfiel;
+            const geschaaldVerbruikProfiel = verbruikProfiel.map(val => val * schaalVerbruik);
+
+            const totaalZonneOpbrengstProfiel = zonneOpbrengstProfiel.reduce((a, b) => a + b, 0);
+            const schaalZon = (totaalZonneOpbrengstProfiel > 0) ? dagelijkseZonneOpbrengst / totaalZonneOpbrengstProfiel : 0;
+            const geschaaldeZonneOpbrengstProfiel = zonneOpbrengstProfiel.map(val => val * schaalZon);
+
+            const batterijInbrengProfiel = new Array(24).fill(0);
+            let huidigeBatterijLading = 0;
+            let maxLading = batterijCapaciteit;
+
+            for (let i = 0; i < 24; i++) {
+                const nettoEnergie = geschaaldeZonneOpbrengstProfiel[i] - geschaaldVerbruikProfiel[i];
+                if (nettoEnergie > 0) {
+                    const kanOpladen = maxLading - huidigeBatterijLading;
+                    const opgeladen = Math.min(nettoEnergie, kanOpladen);
+                    huidigeBatterijLading += opgeladen;
+                    batterijInbrengProfiel[i] = -opgeladen;
+                } else if (nettoEnergie < 0) {
+                    const benodigd = -nettoEnergie;
+                    const kanOntladen = huidigeBatterijLading;
+                    const ontladen = Math.min(benodigd, kanOntladen);
+                    huidigeBatterijLading -= ontladen;
+                    batterijInbrengProfiel[i] = ontladen;
+                }
+            }
+
+            if (dailyEnergyChart) {
+                dailyEnergyChart.destroy();
+            }
+
+            dailyEnergyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+                    datasets: [
+                        {
+                            label: 'Eigen verbruik (kWh)',
+                            data: geschaaldVerbruikProfiel,
+                            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+                            stack: 'energie'
+                        },
+                        {
+                            label: 'Zonne-opbrengst (kWh)',
+                            data: geschaaldeZonneOpbrengstProfiel,
+                            backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                            stack: 'energie'
+                        },
+                        {
+                            label: 'Batterij inbreng (kWh)',
+                            data: batterijInbrengProfiel,
+                            backgroundColor: (context) => {
+                                const value = context.dataset.data[context.dataIndex];
+                                return value > 0 ? 'rgba(52, 152, 219, 0.7)' : 'rgba(155, 89, 182, 0.7)';
+                            },
+                            stack: 'energie'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Tijdstip (uur)'
+                            }
+                        },
+                        y: {
+                            stacked: false,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Energie (kWh)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(2) + ' kWh';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Roep de startpagina-logica aan bij het laden van de pagina
+            startCalculator();
+        });
+    </script>
+</body>
+</html>
