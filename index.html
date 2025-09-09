@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thuisbatterij Calculator V9.4</title>
+    <title>Thuisbatterij Calculator V9.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* CSS is ongewijzigd */
         body { font-family: 'Roboto', sans-serif; background-color: #f0f4f8; color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; }
         .container { max-width: 700px; width: 100%; background-color: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
         .logo { max-width: 250px; width: 100%; height: auto; margin-bottom: 20px; }
@@ -57,10 +56,23 @@
         .version-display { font-size: 0.8em; color: #aaa; margin-top: 20px; text-align: center; }
         .chart-canvas-container { position: relative; height: 400px; width: 100%; }
         #adviesSamenvatting { line-height: 1.6; text-align: left; }
+
+        /* --- NIEUW: CSS voor productlink en prijs --- */
+        #productAanbevelingDiv { margin-top: 15px; }
+        #productLink { font-size: 1.2em; font-weight: 700; text-decoration: none; color: #2980b9; }
+        #productLink:hover { text-decoration: underline; }
+        #productPrijs { display: block; font-size: 1.1em; color: #333; margin-top: 5px; }
     </style>
 </head>
 <body>
-    <div id="start-scherm" class="container active"> <img src="exclupower-logo.jpg" alt="Exclupower Bedrijfslogo" class="logo"> <h1>Welkom bij de Thuisbatterij Calculator</h1> <p>Ontdek welke thuisbatterij het beste bij uw situatie past.</p> <a href="#" class="btn btn-primary" id="startBtn">Start de berekening</a> <div class="version-display">Versie 9.4</div> </div>
+    <div id="start-scherm" class="container active">
+        <img src="exclupower-logo.jpg" alt="Exclupower Bedrijfslogo" class="logo">
+        <h1>Welkom bij de Thuisbatterij Calculator</h1>
+        <p>Ontdek welke thuisbatterij het beste bij uw situatie past.</p>
+        <a href="#" class="btn btn-primary" id="startBtn">Start de berekening</a>
+        <div class="version-display">Versie 9.5</div>
+    </div>
+
     <div id="calculator-scherm" class="container" style="display: none;">
         <div id="step-1" class="step-container"> <h2 class="question-title">Wat is je geschatte jaarlijkse energieverbruik?</h2> <div class="answer-option" data-value="2000" onclick="selectAnswer(1, this)"><span class="icon">🏠</span>Tot 2.000 kWh</div> <div class="answer-option" data-value="3000" onclick="selectAnswer(1, this)"><span class="icon">👨‍👩‍👧</span>2.000 - 4.000 kWh</div> <div class="answer-option" data-value="5000" onclick="selectAnswer(1, this)"><span class="icon">👨‍👩‍👧‍👦</span>4.000 - 6.000 kWh</div> <div class="answer-option" data-value="7000" onclick="selectAnswer(1, this)"><span class="icon">🏘️</span>6.000 - 8.000 kWh</div> <div class="answer-option" data-value="9000" onclick="selectAnswer(1, this)"><span class="icon">🏰</span>8.000+ kWh</div> </div>
         <div id="step-2" class="step-container"> <h2 class="question-title">Heeft u al zonnepanelen?</h2> <div class="answer-option" data-value="ja" onclick="selectAnswer(2, this)"><span class="icon">☀️</span>Ja</div> <div class="answer-option" data-value="nee" onclick="selectAnswer(2, this)"><span class="icon">🚫</span>Nee</div> </div>
@@ -71,10 +83,20 @@
         <div id="step-7" class="step-container"> <h2 class="question-title">Wil je een schaalbare batterij?</h2> <div class="answer-option" data-value="zeer-belangrijk" onclick="selectAnswer(7, this)"><span class="icon">📈</span>Zeer belangrijk</div> <div class="answer-option" data-value="belangrijk" onclick="selectAnswer(7, this)"><span class="icon">📊</span>Belangrijk</div> <div class="answer-option" data-value="niet-zo-belangrijk" onclick="selectAnswer(7, this)"><span class="icon">➖</span>Niet zo belangrijk</div> <div class="answer-option" data-value="helemaal-niet-belangrijk" onclick="selectAnswer(7, this)"><span class="icon">🚫</span>Helemaal niet belangrijk</div> </div>
         <div id="step-8" class="step-container"> <h2 class="question-title">Hoe belangrijk is smart home integratie?</h2> <div class="answer-option" data-value="zeer-belangrijk" onclick="selectAnswer(8, this)"><span class="icon">💡</span>Zeer belangrijk</div> <div class="answer-option" data-value="belangrijk" onclick="selectAnswer(8, this)"><span class="icon">📱</span>Belangrijk</div> <div class="answer-option" data-value="niet-zo-belangrijk" onclick="selectAnswer(8, this)"><span class="icon">🏠</span>Niet zo belangrijk</div> <div class="answer-option" data-value="helemaal-niet-belangrijk" onclick="selectAnswer(8, this)"><span class="icon">❌</span>Helemaal niet belangrijk</div> </div>
         <div id="step-9" class="step-container"> <h2 class="question-title">Interesse in dynamische energieprijzen?</h2> <div class="answer-option" data-value="zeer-geinteresseerd" onclick="selectAnswer(9, this)"><span class="icon">💰</span>Ja, zeer geïnteresseerd</div> <div class="answer-option" data-value="enigszins-geinteresseerd" onclick="selectAnswer(9, this)"><span class="icon">📈</span>Ja, enigszins</div> <div class="answer-option" data-value="niet-geinteresseerd" onclick="selectAnswer(9, this)"><span class="icon">💸</span>Nee, niet geïnteresseerd</div> </div>
+        
         <div id="resultaat-stap" class="step-container">
             <h2 class="question-title">Uw Persoonlijke Advies Dashboard</h2>
             <div class="results-grid">
-                <div class="result-card main-recommendation"> <h2>Uw Aanbevolen Batterijcapaciteit</h2> <p><strong id="capaciteitResultaat" style="font-size: 1.5em;"></strong></p> <div id="productAanbevelingDiv" style="display:none;"> <p id="productAdviesText"></p> <a href="#" id="productLink" class="btn btn-primary" target="_blank">Bekijk Product</a> </div> </div>
+                <div class="result-card main-recommendation">
+                    <h2>Ons Advies</h2>
+                    <p>Berekende behoefte: <strong id="capaciteitResultaat" style="font-size: 1.2em;"></strong></p>
+                    <div id="productAanbevelingDiv" style="display:none;">
+                        <a href="#" id="productLink" target="_blank">
+                            <strong id="productNaam"></strong>
+                        </a>
+                        <span id="productPrijs"></span>
+                    </div>
+                </div>
                 <div class="result-card interactive-settings">
                     <h3>Verfijn uw advies</h3>
                     <div class="setting-row"> <label for="verbruikSlider">Jaarlijks verbruik</label> <input type="range" id="verbruikSlider" min="1000" max="15000" step="100"> <span class="value-display" id="verbruikValue">3000 kWh</span> </div>
@@ -96,25 +118,25 @@
                 </div>
             </div>
         </div>
+        
         <div class="button-container"> <button class="btn btn-secondary" id="terugBtn" onclick="prevStep()">← Terug</button> <button class="btn btn-primary" id="volgendeBtn" onclick="nextStep()">Volgende →</button> </div>
-        <div class="version-display">Versie 9.4</div>
+        <div class="version-display">Versie 9.5</div>
     </div>
 
     <script>
         let currentStep = 1; const totalSteps = 9; const formAnswers = {};
         
-        // --- PAS DEZE LINKS AAN NAAR UW EIGEN WEBSHOP ---
+        // --- PAS DEZE PRIJZEN EN LINKS AAN NAAR UW EIGEN PRODUCTEN ---
         const products = [
-            { naam: "Instap Batterij 2.5 kWh", capaciteit: 2.5, link: "#" },
-            // --- HIER IS UW TESTLINK TOEGEVOEGD ---
-            { naam: "Basis Batterij 5 kWh", capaciteit: 5, link: "https://exclupower.nl/product/marstek-venus-2-0-5kw-plug-&-play-thuisbatterij" },
-            { naam: "Standaard Batterij 7.5 kWh", capaciteit: 7.5, link: "#" },
-            { naam: "Standaard Batterij 10 kWh", capaciteit: 10, link: "#" },
-            { naam: "Premium Batterij 12.5 kWh", capaciteit: 12.5, link: "#" },
-            { naam: "Premium Batterij 15 kWh", capaciteit: 15, link: "#" },
-            { naam: "Grootverbruiker Batterij 20 kWh", capaciteit: 20, link: "#" }
+            { naam: "Instap Batterij 2.5 kWh", capaciteit: 2.5, prijs: 1999, link: "https://exclupower.nl/product/link-naar-2-5kwh" },
+            { naam: "Basis Batterij 5 kWh", capaciteit: 5, prijs: 3499, link: "https://exclupower.nl/product/marstek-venus-2-0-5kw-plug-&-play-thuisbatterij" },
+            { naam: "Standaard Batterij 7.5 kWh", capaciteit: 7.5, prijs: 4899, link: "https://exclupower.nl/product/link-naar-7-5kwh" },
+            { naam: "Standaard Batterij 10 kWh", capaciteit: 10, prijs: 5999, link: "https://exclupower.nl/product/link-naar-10kwh" },
+            { naam: "Premium Batterij 12.5 kWh", capaciteit: 12.5, prijs: 7299, link: "https://exclupower.nl/product/link-naar-12-5kwh" },
+            { naam: "Premium Batterij 15 kWh", capaciteit: 15, prijs: 8499, link: "https://exclupower.nl/product/link-naar-15kwh" },
+            { naam: "Grootverbruiker Batterij 20 kWh", capaciteit: 20, prijs: 10999, link: "https://exclupower.nl/product/link-naar-20kwh" }
         ];
-        // ----------------------------------------------------
+        // ----------------------------------------------------------------
 
         const monthFactors = { "Jan": 0.3, "Feb": 0.5, "Mrt": 0.8, "Apr": 1.2, "Mei": 1.5, "Jun": 1.6, "Jul": 1.5, "Aug": 1.3, "Sep": 1.0, "Okt": 0.6, "Nov": 0.4, "Dec": 0.2 };
         const mockDayAheadPrices = [0.05,0.04,0.03,0.03,0.04,0.07,0.12,0.14,0.13,0.11,0.08,0.06,0.02,0.01,0.02,0.05,0.10,0.15,0.16,0.13,0.11,0.09,0.08,0.06];
@@ -176,15 +198,14 @@
             document.getElementById('capaciteitResultaat').textContent = `${calcs.batterijCapaciteit.toFixed(1)} kWh`;
             const aanbevolenProduct = findBestProduct(calcs.batterijCapaciteit);
             if (aanbevolenProduct) {
-                let adviesText = `Om aan uw berekende behoefte van <strong>${calcs.batterijCapaciteit.toFixed(1)} kWh</strong> te voldoen, adviseren wij het dichtstbijzijnde, grotere model: de <strong>${aanbevolenProduct.naam}</strong>.`;
-                if (calcs.batterijCapaciteit == aanbevolenProduct.capaciteit) { adviesText = `Wij adviseren de <strong>${aanbevolenProduct.naam}</strong>.` }
-                document.getElementById('productAdviesText').innerHTML = adviesText;
                 document.getElementById('productLink').href = aanbevolenProduct.link;
+                document.getElementById('productNaam').textContent = aanbevolenProduct.naam;
+                document.getElementById('productPrijs').textContent = `Prijs: € ${aanbevolenProduct.prijs.toLocaleString('nl-NL')}`;
                 document.getElementById('productAanbevelingDiv').style.display = 'block';
             }
-            let samenvatting = `Op basis van een jaarlijks verbruik van <strong>${state.jaarlijksVerbruikKwh} kWh</strong> en <strong>${state.aantalPanelen} zonnepanelen</strong>, is uw basisbehoefte voor zelfconsumptie circa <strong>${calcs.basisAdvies.toFixed(1)} kWh</strong>. `;
-            if (calcs.handelsBonus > 0) { samenvatting += `Daar is een handelsbonus van <strong>${calcs.handelsBonus.toFixed(1)} kWh</strong> aan toegevoegd vanwege uw interesse in dynamische prijzen. `; }
-            samenvatting += `Dit leidt tot een totaal berekend advies van <strong>${calcs.totaalAdvies.toFixed(1)} kWh</strong>, wat we afronden naar het best passende model van <strong>${calcs.batterijCapaciteit.toFixed(1)} kWh</strong>.`
+            let samenvatting = `Op basis van uw situatie is de berekende behoefte <strong>${calcs.totaalAdvies.toFixed(1)} kWh</strong>. Dit is opgebouwd uit een basiscapaciteit van <strong>${calcs.basisAdvies.toFixed(1)} kWh</strong> voor zelfconsumptie`;
+            if (calcs.handelsBonus > 0) { samenvatting += ` en een handelsbonus van <strong>${calcs.handelsBonus.toFixed(1)} kWh</strong>`; }
+            samenvatting += `. We ronden dit af naar het dichtstbijzijnde, passende model van <strong>${calcs.batterijCapaciteit.toFixed(1)} kWh</strong>.`;
             document.getElementById('adviesSamenvatting').innerHTML = samenvatting;
             let aannamesHTML = `<li><span>Conversiefactor (jaar):</span> <span class="value">0,9 kWh/Wp</span></li>`;
             if (state.aantalPanelen > 0) { const paneelType = (formAnswers['step-2'] === 'ja') ? 400 : 430; aannamesHTML += `<li><span>Zonnepanelen:</span> <span class="value">${state.aantalPanelen} × ${paneelType} Wp</span></li>`; }
