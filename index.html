@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thuisbatterij Calculator V18.0</title>
+    <title>Thuisbatterij Calculator V18.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* CSS is ongewijzigd */
         body { font-family: 'Roboto', sans-serif; background-color: #f0f4f8; color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; }
         .container { max-width: 700px; width: 100%; background-color: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
         .logo { max-width: 250px; width: 100%; height: auto; margin-bottom: 20px; }
@@ -39,8 +38,8 @@
         .setting-row .value-display { font-weight: 700; min-width: 60px; text-align: right; }
         .version-display { font-size: 0.8em; color: #aaa; margin-top: 20px; text-align: center; }
         .chart-canvas-container { position: relative; height: 350px; width: 100%; }
-        .chart-summary { display: flex; justify-content: space-around; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e6ed; }
-        .summary-item { font-size: 0.9em; padding: 0 10px; }
+        .chart-summary { display: flex; justify-content: space-around; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e6ed; flex-wrap: wrap; }
+        .summary-item { font-size: 0.9em; padding: 0 10px; margin-bottom: 10px; }
         .summary-item strong { display: block; font-size: 1.2em; }
         .chart-explanation { font-size: 0.9em; color: #555; margin-top: -10px; margin-bottom: 15px; text-align: left; }
         .placeholder-message { color: #888; text-align: center; padding: 50px 20px; font-style: italic; }
@@ -56,7 +55,7 @@
         <h1>Welkom bij de Thuisbatterij Calculator</h1>
         <p>Ontdek welke thuisbatterij het beste bij uw situatie past.</p>
         <a href="#" class="btn btn-primary" id="startBtn">Start de berekening</a>
-        <div class="version-display">Versie 18.0</div>
+        <div class="version-display">Versie 18.1</div>
     </div>
 
     <div id="calculator-scherm" class="container" style="display: none;">
@@ -84,19 +83,18 @@
         </div>
         
         <div class="button-container"> <button class="btn btn-secondary" id="terugBtn" onclick="prevStep()">← Terug</button> <button class="btn btn-primary" id="volgendeBtn" onclick="nextStep()">Volgende →</button> </div>
-        <div class="version-display">Versie 18.0</div>
+        <div class="version-display">Versie 18.1</div>
     </div>
 
     <script>
         let currentStep = 1; const totalSteps = 6; const formAnswers = {};
         let scenario1Chart, scenario2Chart, scenario3Chart;
         
-        // --- AANGEPAST: Prijsconstanten met terugleverkosten ---
-        const PRIJS_INKOOP = 0.28; // €/kWh
-        const PRIJS_TERUGLEVER = 0.07; // €/kWh
-        const KOSTEN_TERUGLEVER_PER_KWH = 0.10; // Extra heffing per geëxporteerde kWh
-        const KOSTEN_BATTERIJ_VAST = 1500; // €
-        const KOSTEN_BATTERIJ_PER_KWH = 250; // €/kWh
+        const PRIJS_INKOOP = 0.28;
+        const PRIJS_TERUGLEVER = 0.07;
+        const KOSTEN_TERUGLEVER_PER_KWH = 0.10;
+        const KOSTEN_BATTERIJ_VAST = 1500;
+        const KOSTEN_BATTERIJ_PER_KWH = 250;
 
         document.addEventListener('DOMContentLoaded', () => { document.getElementById('startBtn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('start-scherm').style.display = 'none'; document.getElementById('calculator-scherm').style.display = 'block'; showStep(1); }); });
         function showStep(step) { document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active')); const el = document.getElementById(`step-${step}`) || document.getElementById('resultaat-stap'); if (el) el.classList.add('active'); updateButtons(); updateProgressBar(); }
@@ -162,36 +160,35 @@
             }
         }
         
+        // --- GECORRIGEERDE GRAFIEK FUNCTIES MET FINANCIËLE DATA ---
         function renderScenario1Chart(verbruikData) {
             const ctx = document.getElementById('scenario1ChartCanvas').getContext('2d');
             const totalImport = verbruikData.reduce((a, b) => a + b, 0);
             const jaarKosten = totalImport * 365 * PRIJS_INKOOP;
-            document.getElementById('summary1').innerHTML = `<div class="summary-item"><strong>${(totalImport * 365).toFixed(0)} kWh/jaar</strong>Import</div> <div class="summary-item"><strong>€ ${jaarKosten.toLocaleString('nl-NL', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</strong>Jaarkosten</div>`;
+            document.getElementById('summary1').innerHTML = `<div class="summary-item"><strong>${(totalImport * 365).toFixed(0)} kWh/j</strong>Import</div> <div class="summary-item"><strong>€ ${jaarKosten.toLocaleString('nl-NL', {maximumFractionDigits: 0})}</strong>Jaarkosten</div>`;
             if (scenario1Chart) scenario1Chart.destroy();
-            scenario1Chart = new Chart(ctx, { type: 'bar', data: { labels: Array.from({length: 24}, (_, i) => `${i}:00`), datasets: [{ label: 'Import van Net', data: verbruikData, backgroundColor: 'rgba(231, 76, 60, 0.7)' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { stacked: true, title: {display: true, text: 'Energie (kWh)'} } }, plugins: { legend: { display: false }} } });
+            scenario1Chart = new Chart(ctx, { type: 'bar', data: { datasets: [{ label: 'Import van Net', data: verbruikData, backgroundColor: 'rgba(231, 76, 60, 0.7)' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { type: 'category', labels: Array.from({length: 24}, (_, i) => `${i}:00`) }, y: { stacked: true, title: {display: true, text: 'Energie (kWh)'} } }, plugins: { legend: { display: false } } } });
         }
 
         function renderScenario2Chart(verbruikData, opbrengstData) {
             const ctx = document.getElementById('scenario2ChartCanvas').getContext('2d');
             let totalImport = 0, totalExport = 0;
-            for(let i=0; i<24; i++) {
-                totalImport += Math.max(0, verbruikData[i] - opbrengstData[i]);
-                totalExport += Math.max(0, opbrengstData[i] - verbruikData[i]);
-            }
+            for(let i=0; i<24; i++) { totalImport += Math.max(0, verbruikData[i] - opbrengstData[i]); totalExport += Math.max(0, opbrengstData[i] - verbruikData[i]); }
+            
             const jaarImportKosten = totalImport * 365 * PRIJS_INKOOP;
             const jaarExportOpbrengst = totalExport * 365 * PRIJS_TERUGLEVER;
-            const jaarTerugleverKosten = totalExport * 365 * KOSTEN_TERUGLEVER_PER_KWH; // Nieuwe kostenpost
+            const jaarTerugleverKosten = totalExport * 365 * KOSTEN_TERUGLEVER_PER_KWH;
             const jaarKosten = jaarImportKosten - jaarExportOpbrengst + jaarTerugleverKosten;
             const basisKosten = verbruikData.reduce((a, b) => a + b, 0) * 365 * PRIJS_INKOOP;
             
-            document.getElementById('summary2').innerHTML = `<div class="summary-item"><strong>€ ${jaarKosten.toLocaleString('nl-NL', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</strong>Jaarkosten</div><div class="summary-item" style="color:#27ae60;"><strong>€ ${(basisKosten - jaarKosten).toLocaleString('nl-NL', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</strong>Besparing</div>`;
+            document.getElementById('summary2').innerHTML = `<div class="summary-item"><strong>€ ${jaarKosten.toLocaleString('nl-NL', {maximumFractionDigits: 0})}</strong>Jaarkosten</div><div class="summary-item" style="color:red;"><strong>€ ${jaarTerugleverKosten.toLocaleString('nl-NL', {maximumFractionDigits: 0})}</strong>Terugleverkosten</div><div class="summary-item" style="color:#27ae60;"><strong>€ ${(basisKosten - jaarKosten).toLocaleString('nl-NL', {maximumFractionDigits: 0})}</strong>Besparing</div>`;
             if (scenario2Chart) scenario2Chart.destroy();
-            scenario2Chart = new Chart(ctx, { type: 'bar', data: { labels: Array.from({length: 24}, (_, i) => `${i}:00`), datasets: [ { label: 'Eigen Verbruik Zon', data: verbruikData.map((v,i) => Math.min(v, opbrengstData[i])), backgroundColor: 'rgba(46, 204, 113, 0.7)' }, { label: 'Import van Net', data: verbruikData.map((v,i) => Math.max(0, v-opbrengstData[i])), backgroundColor: 'rgba(231, 76, 60, 0.7)' }, { label: 'Export naar Net', data: opbrengstData.map((o, i) => -Math.max(0, o - verbruikData[i])), backgroundColor: 'rgba(155, 89, 182, 0.7)' } ] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, title: {display: true, text: 'Energie (kWh)'} } }, plugins: { legend: { display: false }} } });
+            scenario2Chart = new Chart(ctx, { type: 'bar', data: { labels: Array.from({length: 24}, (_, i) => `${i}:00`), datasets: [ { label: 'Eigen Verbruik Zon', data: verbruikData.map((v,i) => Math.min(v, opbrengstData[i])), backgroundColor: 'rgba(46, 204, 113, 0.7)' }, { label: 'Import van Net', data: verbruikData.map((v,i) => Math.max(0, v-opbrengstData[i])), backgroundColor: 'rgba(231, 76, 60, 0.7)' }, { label: 'Export naar Net', data: opbrengstData.map((o, i) => -Math.max(0, o - verbruikData[i])), backgroundColor: 'rgba(155, 89, 182, 0.7)' } ] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, title: {display: true, text: 'Energie (kWh)'} } }, plugins: { legend: { display: false } } } });
         }
 
         function renderScenario3Chart(verbruikData, opbrengstData, batterijCapaciteit) {
             const ctx = document.getElementById('scenario3ChartCanvas').getContext('2d');
-            let totalImport = 0, batterijLading = 0, totalExportNaBatt = 0;
+            let totalImport = 0, totalExportNaBatt = 0, batterijLading = 0;
             const importData = [], directVerbruikData = [], battVerbruikData = [];
             for (let i = 0; i < 24; i++) {
                 const verbruik = verbruikData[i], opbrengst = opbrengstData[i];
@@ -202,16 +199,16 @@
                 else if (netto < 0) { const tekort = -netto; const kanOntladen = batterijLading; ontlading = Math.min(tekort, kanOntladen); batterijLading -= ontlading; imp = tekort - ontlading; }
                 directVerbruikData.push(direct); battVerbruikData.push(ontlading); importData.push(imp); totalImport += imp;
             }
-            const kostenScenario2 = ((verbruikData.reduce((s,v,i)=>s+Math.max(0,v-opbrengstData[i]),0)*365*PRIJS_INKOOP) - (opbrengstData.reduce((s,o,i)=>s+Math.max(0,o-verbruikData[i]),0)*365*PRIJS_TERUGLEVER)) + (opbrengstData.reduce((s,o,i)=>s+Math.max(0,o-verbruikData[i]),0)*365*KOSTEN_TERUGLEVER_PER_KWH);
-            const jaarKosten = (totalImport * 365 * PRIJS_INKOOP) - (totalExportNaBatt * 365 * PRIJS_TERUGLEVER) + (totalExportNaBatt * 365 * KOSTEN_TERUGLEVER_PER_KWH);
-            const besparing = kostenScenario2 - jaarKosten;
+            const jaarKostenS2 = ((verbruikData.reduce((s,v,i)=>s+Math.max(0,v-opbrengstData[i]),0)*365*PRIJS_INKOOP) - (opbrengstData.reduce((s,o,i)=>s+Math.max(0,o-verbruikData[i]),0)*365*PRIJS_TERUGLEVER)) + (opbrengstData.reduce((s,o,i)=>s+Math.max(0,o-verbruikData[i]),0)*365*KOSTEN_TERUGLEVER_PER_KWH);
+            const jaarKostenS3 = (totalImport * 365 * PRIJS_INKOOP) - (totalExportNaBatt * 365 * PRIJS_TERUGLEVER) + (totalExportNaBatt * 365 * KOSTEN_TERUGLEVER_PER_KWH);
+            const besparing = jaarKostenS2 - jaarKostenS3;
             const investering = KOSTEN_BATTERIJ_VAST + (batterijCapaciteit * KOSTEN_BATTERIJ_PER_KWH);
             const terugverdientijd = (besparing > 1) ? (investering / besparing).toFixed(1) : "N.v.t.";
             
-            document.getElementById('summary3').innerHTML = `<div class="summary-item"><strong>€ ${jaarKosten.toLocaleString('nl-NL', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</strong>Jaarkosten</div><div class="summary-item" style="color:#27ae60;"><strong>€ ${besparing.toLocaleString('nl-NL', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</strong>Extra Besparing</div>`;
-            document.getElementById('financieelOverzicht').innerHTML = `<li><span>Geschatte investering:</span> <strong>€ ${investering.toLocaleString('nl-NL')}</strong></li> <li><span>Jaarlijkse besparing:</span> <strong>€ ${besparing.toLocaleString('nl-NL', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</strong></li> <li><span>Geschatte terugverdientijd:</span> <strong>${terugverdientijd} jaar</strong></li>`;
+            document.getElementById('summary3').innerHTML = `<div class="summary-item"><strong>€ ${jaarKostenS3.toLocaleString('nl-NL', {maximumFractionDigits: 0})}</strong>Jaarkosten</div><div class="summary-item" style="color:#27ae60;"><strong>€ ${besparing.toLocaleString('nl-NL', {maximumFractionDigits: 0})}</strong>Extra Besparing</div>`;
+            document.getElementById('financieelOverzicht').innerHTML = `<li><span>Geschatte investering:</span> <strong>€ ${investering.toLocaleString('nl-NL')}</strong></li> <li><span>Jaarlijkse besparing:</span> <strong>€ ${besparing.toLocaleString('nl-NL', {maximumFractionDigits: 0})}</strong></li> <li><span>Geschatte terugverdientijd:</span> <strong>${terugverdientijd} jaar</strong></li>`;
             if (scenario3Chart) scenario3Chart.destroy();
-            scenario3Chart = new Chart(ctx, { type: 'bar', data: { labels: Array.from({length: 24}, (_, i) => `${i}:00`), datasets: [ { label: 'Eigen Verbruik Zon', data: directVerbruikData, backgroundColor: 'rgba(46, 204, 113, 0.7)' }, { label: 'Verbruik uit Batterij', data: battVerbruikData, backgroundColor: 'rgba(52, 152, 219, 0.7)' }, { label: 'Import van Net', data: importData, backgroundColor: 'rgba(231, 76, 60, 0.7)' } ] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, title: {display: true, text: 'Energie (kWh)'} } }, plugins: { legend: { display: false }} } });
+            scenario3Chart = new Chart(ctx, { type: 'bar', data: { labels: Array.from({length: 24}, (_, i) => `${i}:00`), datasets: [ { label: 'Eigen Verbruik Zon', data: directVerbruikData, backgroundColor: 'rgba(46, 204, 113, 0.7)' }, { label: 'Verbruik uit Batterij', data: battVerbruikData, backgroundColor: 'rgba(52, 152, 219, 0.7)' }, { label: 'Import van Net', data: importData, backgroundColor: 'rgba(231, 76, 60, 0.7)' } ] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, title: {display: true, text: 'Energie (kWh)'} } }, plugins: { legend: { display: false } } } });
         }
     </script>
 </body>
