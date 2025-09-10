@@ -3,49 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thuisbatterij Calculator V25.0</title>
+    <title>Thuisbatterij Calculator V26.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: 'Roboto', sans-serif; background-color: #f0f4f8; color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; }
-        .container { max-width: 700px; width: 100%; background-color: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
-        .logo { max-width: 250px; width: 100%; height: auto; margin-bottom: 20px; }
-        h1 { color: #1e3a5f; font-size: 2.5rem; margin-top: 0; }
-        h2.question-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; color: #1e3a5f; }
-        .step-container, #start-scherm { display: none; }
-        .step-container.active, #start-scherm.active { display: block; }
-        .answer-option { border: 2px solid #e0e6ed; border-radius: 12px; padding: 15px 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; text-align: left; }
-        .answer-option:hover { border-color: #3498db; background-color: #f9fcff; }
-        .answer-option.selected { border-color: #2ecc71; background-color: #eaf9ed; box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2); }
-        .answer-option .icon { font-size: 2rem; color: #1e3a5f; margin-right: 20px; display: flex; align-items: center; justify-content: center; width: 40px; flex-shrink: 0; }
-        .input-text { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #e0e6ed; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
-        .button-container { display: flex; justify-content: space-between; margin-top: 30px; }
-        .btn { padding: 15px 30px; border: none; border-radius: 50px; cursor: pointer; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; text-decoration: none; }
-        .btn-primary { background-color: #3498db; color: white; }
-        .btn-secondary { background-color: #e0e6ed; color: #555; }
-        .progress-bar-container { background-color: #e0e6ed; border-radius: 50px; height: 10px; margin-bottom: 10px; }
-        .progress-bar { height: 100%; background-color: #2ecc71; border-radius: 50px; width: 0%; transition: width 0.4s ease; }
-        .progress-text { text-align: center; font-size: 0.9rem; margin-bottom: 20px; color: #555; }
-        .results-grid { display: grid; grid-template-columns: 1fr; gap: 20px; text-align: left; margin-top: 20px; }
-        .result-card { background-color: #f9fbfd; padding: 20px; border-radius: 12px; border: 1px solid #e0e6ed; }
-        .result-card h3 { display: flex; justify-content: space-between; align-items: center; margin-top: 0; color: #1e3a5f; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .main-recommendation { text-align: center; background-color: #eaf9ed; border-color: #2ecc71; }
-        .chart-card { grid-column: 1 / -1; }
-        .interactive-settings { grid-column: 1 / -1; }
-        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
-        .setting-row label { font-weight: 500; margin-right: 10px; flex-basis: 180px; text-align: left; }
-        .setting-row input[type="range"], .setting-row select { flex-grow: 1; margin: 0 15px; }
-        .setting-row .value-display { font-weight: 700; min-width: 60px; text-align: right; }
-        .setting-row select { padding: 8px; border-radius: 8px; border: 1px solid #e0e6ed; background-color: white; }
-        .version-display { font-size: 0.8em; color: #aaa; margin-top: 20px; text-align: center; }
-        .chart-canvas-container { position: relative; height: 350px; width: 100%; }
-        .chart-summary { display: flex; justify-content: space-around; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e6ed; flex-wrap: wrap; }
-        .summary-item { font-size: 0.9em; padding: 0 10px; margin-bottom: 10px; }
-        .summary-item strong { display: block; font-size: 1.2em; }
-        .chart-explanation { font-size: 0.9em; color: #555; margin-top: -10px; margin-bottom: 15px; text-align: left; }
-        .placeholder-message { color: #888; text-align: center; padding: 50px 20px; font-style: italic; }
-        #adviesSamenvatting { line-height: 1.6; text-align: left; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="start-scherm" class="container active">
@@ -53,7 +13,7 @@
         <h1>Welkom bij de Thuisbatterij Calculator</h1>
         <p>Ontdek welke thuisbatterij het beste bij uw situatie past.</p>
         <a href="#" class="btn btn-primary" id="startBtn">Start de berekening</a>
-        <div class="version-display">Versie 25.0</div>
+        <div class="version-display">Versie 26.0</div>
     </div>
 
     <div id="calculator-scherm" class="container" style="display: none;">
@@ -61,8 +21,6 @@
         <div id="step-2" class="step-container"> <h2 class="question-title">Heeft u al zonnepanelen?</h2> <div class="answer-option" data-value="ja" onclick="selectAnswer(2, this)"><span class="icon">☀️</span>Ja</div> <div class="answer-option" data-value="nee" onclick="selectAnswer(2, this)"><span class="icon">🚫</span>Nee</div> </div>
         <div id="step-3" class="step-container"> <h2 class="question-title">Heeft u interesse om zonnepanelen te laten installeren?</h2> <div class="answer-option" data-value="ja" onclick="selectAnswer(3, this)"><span class="icon">👍</span>Ja, ik heb interesse</div> <div class="answer-option" data-value="nee" onclick="selectAnswer(3, this)"><span class="icon">👎</span>Nee, op dit moment niet</div> </div>
         <div id="step-4" class="step-container"> <h2 class="question-title">Hoeveel zonnepanelen heeft u?</h2> <input type="number" id="panelenInput" class="input-text" placeholder="Voer het aantal zonnepanelen in" min="1"> <div class="answer-option" onclick="selectAnswer(4, this)" data-value="dummy"> <span class="icon">#️⃣</span>Klik op 'Volgende' als u het aantal heeft ingevuld. </div> </div>
-        <div id="step-5" class="step-container"> <h2 class="question-title">Heeft u een elektrische auto?</h2> <div class="answer-option" data-value="ja" onclick="selectAnswer(5, this)"><span class="icon">🚗</span>Ja</div> <div class="answer-option" data-value="nee" onclick="selectAnswer(5, this)"><span class="icon">🚶</span>Nee</div> </div>
-        <div id="step-6" class="step-container"> <h2 class="question-title">Heeft u een warmtepomp?</h2> <div class="answer-option" data-value="ja" onclick="selectAnswer(6, this)"><span class="icon">🔥</span>Ja</div> <div class="answer-option" data-value="nee" onclick="selectAnswer(6, this)"><span class="icon">❄️</span>Nee</div> </div>
         
         <div id="resultaat-stap" class="step-container">
             <h2 class="question-title">Uw Persoonlijke Advies Dashboard</h2>
@@ -73,338 +31,19 @@
                     <p class="chart-explanation">Pas de onderstaande instellingen aan om te zien hoe dit uw aanbevolen batterijcapaciteit beïnvloedt.</p>
                     <div class="setting-row"> <label for="verbruikSlider">Jaarlijks basisverbruik</label> <input type="range" id="verbruikSlider" min="1000" max="10000" step="100"> <span class="value-display" id="verbruikValue"></span> </div>
                     <div class="setting-row"> <label for="panelenSlider">Aantal zonnepanelen</label> <input type="range" id="panelenSlider" min="0" max="40" step="1"> <span class="value-display" id="panelenValue"></span> </div>
-                    <div class="setting-row"> <label for="evSelect">Elektrische auto</label> <select id="evSelect"> <option value="0">Geen</option> <option value="1800">Weinig (tot 10.000 km/j)</option> <option value="3600">Gemiddeld (10-20.000 km/j)</option> <option value="5400">Veel (20.000+ km/j)</option> </select> </div>
-                    <div class="setting-row"> <label for="wpSelect">Warmtepomp</label> <select id="wpSelect"> <option value="0">Geen</option> <option value="1500">Appartement</option> <option value="2500">Tussenwoning</option> <option value="3500">Hoekwoning / 2-onder-1-kap</option> <option value="4500">Vrijstaand</option> </select> </div>
                 </div>
-                <div class="result-card"> <h3>Totaal Jaarverbruik</h3> <p id="totaalVerbruikUitleg"></p> </div>
                 <div class="result-card" style="grid-column: 1 / -1;"> <h3>Toelichting op uw Advies</h3> <p id="adviesSamenvatting"></p> </div>
-                
-                <div class="chart-card" id="scenario1Div">
-                    <h3>Scenario 1: Uw Situatie Zonder Zonnepanelen</h3>
-                    <p class="chart-explanation">Deze grafiek toont een typisch dagelijks energieverbruiksprofiel. Zonder zonnepanelen komt al uw verbruikte stroom (rood) rechtstreeks van het elektriciteitsnet af. Dit betekent dat u volledig afhankelijk bent van uw energieleverancier en de actuele stroomprijzen.</p>
-                    <div class="chart-canvas-container"><canvas id="scenario1ChartCanvas"></canvas></div>
-                    <div class="chart-summary" id="summary1"></div>
-                </div>
-                <div class="chart-card" id="scenario2Div">
-                    <h3>Scenario 2: Met Zonnepanelen</h3>
-                    <p class="chart-explanation">Met zonnepanelen wekt u overdag uw eigen stroom op (gele lijn). Het deel van deze opgewekte stroom dat u direct verbruikt, is uw gratis 'eigen verbruik' (groen). De stroom die u over heeft en niet direct verbruikt, wordt teruggeleverd aan het net (paars, onder de nullijn). U krijgt hiervoor meestal een vergoeding.</p>
-                    <div class="chart-canvas-container" id="scenario2CanvasContainer"><canvas id="scenario2ChartCanvas"></canvas></div>
-                    <div class="chart-summary" id="summary2"></div>
-                </div>
-                <div class="chart-card" id="scenario3Div">
-                    <h3>Scenario 3: Met Zonnepanelen & Thuisbatterij</h3>
-                    <p class="chart-explanation">Dit scenario optimaliseert uw energiegebruik. De gele lijn is opnieuw uw zonne-opbrengst. Het overschot aan zonnestroom dat u niet direct verbruikt, wordt nu niet teruggeleverd maar gebruikt om de batterij op te laden (gele balken, onder de nullijn). Wanneer de zon niet schijnt (bijv. 's avonds), verbruikt u de opgeslagen energie uit uw batterij (lichtblauwe balken). Hierdoor bent u veel minder afhankelijk van het net en bespaart u meer.</p>
-                    <div class="chart-canvas-container" id="scenario3CanvasContainer"><canvas id="scenario3ChartCanvas"></canvas></div>
-                    <div class="chart-summary" id="summary3"></div>
-                </div>
+                <div class="chart-card" id="scenario1Div"> <h3>Scenario 1: Uw Situatie Zonder Zonnepanelen</h3> <p class="chart-explanation">Dit is uw <strong>standaard situatie</strong>. Alle stroom die u verbruikt (de rode balken) wordt direct van het elektriciteitsnet gekocht.</p> <div class="chart-canvas-container"><canvas id="scenario1ChartCanvas"></canvas></div> <div class="chart-summary" id="summary1"></div> </div>
+                <div class="chart-card" id="scenario2Div"> <h3>Scenario 2: Met Zonnepanelen</h3> <p class="chart-explanation">Met zonnepanelen (gele lijn) wordt uw verbruik overdag deels gedekt door eigen zonnestroom (groen). De stroom die u overhoudt, wordt **teruggeleverd** aan het net (paars).</p> <div class="chart-canvas-container" id="scenario2CanvasContainer"><canvas id="scenario2ChartCanvas"></canvas></div> <div class="chart-summary" id="summary2"></div> </div>
+                <div class="chart-card" id="scenario3Div"> <h3>Scenario 3: Met Zonnepanelen & Thuisbatterij</h3> <p class="chart-explanation">Een thuisbatterij **lost het terugleveren op**. Uw zonne-overschot wordt nu gebruikt om de batterij op te laden (donkerblauwe balken, onder de nullijn). 's Avonds verbruikt u deze opgeslagen energie (lichtblauwe balken).</p> <div class="chart-canvas-container" id="scenario3CanvasContainer"><canvas id="scenario3ChartCanvas"></canvas></div> <div class="chart-summary" id="summary3"></div> </div>
             </div>
         </div>
         
         <div class="button-container"> <button class="btn btn-secondary" id="terugBtn" onclick="prevStep()">← Terug</button> <button class="btn btn-primary" id="volgendeBtn" onclick="nextStep()">Volgende →</button> </div>
-        <div class="version-display">Versie 25.0</div>
+        <div class="version-display">Versie 26.0</div>
     </div>
 
-    <script>
-        let currentStep = 1; const totalSteps = 6; const formAnswers = {};
-        let scenario1Chart, scenario2Chart, scenario3Chart;
-        
-        document.addEventListener('DOMContentLoaded', () => { document.getElementById('startBtn').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('start-scherm').style.display = 'none'; document.getElementById('calculator-scherm').style.display = 'block'; showStep(1); }); });
-        function showStep(step) { document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active')); const el = document.getElementById(`step-${step}`) || document.getElementById('resultaat-stap'); if (el) el.classList.add('active'); updateButtons(); updateProgressBar(); }
-        function updateButtons() { const t = document.getElementById('terugBtn'), v = document.getElementById('volgendeBtn'); t.style.display = (currentStep > 1 && currentStep <= totalSteps + 1) ? 'block' : 'none'; v.style.display = (currentStep <= totalSteps) ? 'block' : 'none'; let l = false; let ts = currentStep; while (ts < totalSteps) { ts++; if (!isStepSkipped(ts)) { l = false; break; } l = true; } v.textContent = (currentStep >= totalSteps || l) ? 'Bereken advies' : 'Volgende →'; }
-        function updateProgressBar() { /* Placeholder, geen progress bar zichtbaar */ } // Keep this function for now as it's called
-        function isStepSkipped(step) { if (step === 3 && formAnswers['step-2'] === 'ja') return true; if (step === 4 && formAnswers['step-2'] === 'nee') return true; return false; }
-        function nextStep() { const cs = document.getElementById(`step-${currentStep}`); const so = cs.querySelector('.selected'); if (currentStep === 4) { const pi = document.getElementById('panelenInput'); if (!pi.value || parseInt(pi.value) <= 0) { alert("Vul een geldig aantal zonnepanelen in."); return; } formAnswers[`step-${currentStep}`] = parseInt(pi.value); cs.querySelector('.answer-option').classList.add('selected'); } else { if (!so && currentStep !== 4) { alert("Selecteer een optie."); return; } formAnswers[`step-${currentStep}`] = so ? so.dataset.value : (currentStep === 4 ? formAnswers[`step-${currentStep}`] : ''); } let l = false; let ts = currentStep; while (ts < totalSteps) { ts++; if (!isStepSkipped(ts)) { l = false; break; } l = true; } if (currentStep >= totalSteps || l) { berekenAdvies(); return; } do { currentStep++; } while (isStepSkipped(currentStep)); showStep(currentStep); }
-        function prevStep() { delete formAnswers[`step-${currentStep}`]; do { currentStep--; } while (isStepSkipped(currentStep)); if (currentStep >= 1) showStep(currentStep); }
-        function selectAnswer(step, element) { const c = document.getElementById(`step-${step}`); c.querySelectorAll('.answer-option').forEach(el => el.classList.remove('selected')); element.classList.add('selected'); }
-        
-        function berekenAdvies() { currentStep = totalSteps + 1; setupInteractiveControls(); showStep('resultaat-stap'); }
-        function setupInteractiveControls() {
-            const controls = ['verbruikSlider', 'panelenSlider', 'evSelect', 'wpSelect'];
-            controls.forEach(id => { const el = document.getElementById(id); const eventType = (el.type === 'range' || el.tagName === 'SELECT') ? 'input' : 'change'; el.addEventListener(eventType, recalculateAndRedraw); });
-            // Initial waardes instellen op basis van formAnswers
-            document.getElementById('verbruikSlider').value = formAnswers['step-1'] || 3000;
-            document.getElementById('panelenSlider').value = (formAnswers['step-2'] === 'ja' && formAnswers['step-4']) ? formAnswers['step-4'] : (formAnswers['step-3'] === 'ja' ? 12 : 0);
-            document.getElementById('evSelect').value = formAnswers['step-5'] === 'ja' ? "3600" : "0";
-            document.getElementById('wpSelect').value = formAnswers['step-6'] === 'ja' ? "2500" : "0";
-            recalculateAndRedraw();
-        }
-        
-        function recalculateAndRedraw() {
-            const state = { 
-                basisVerbruikKwh: parseInt(document.getElementById('verbruikSlider').value),
-                aantalPanelen: parseInt(document.getElementById('panelenSlider').value),
-                evVerbruikKwh: parseInt(document.getElementById('evSelect').value),
-                wpVerbruikKwh: parseInt(document.getElementById('wpSelect').value),
-                heeftZonnepanelenInitieel: formAnswers['step-2'] === 'ja' // Dit is voor de paneelType berekening
-            };
-            const calculations = calculateAdvice(state);
-            updateDashboardUI(state, calculations);
-        }
-
-        function calculateAdvice(state) {
-            const jaarlijksVerbruikKwh = state.basisVerbruikKwh + state.evVerbruikKwh + state.wpVerbruikKwh;
-            const totaalDagelijksVerbruik = jaarlijksVerbruikKwh / 365;
-            let totaalWp = 0;
-            if (state.aantalPanelen > 0) { const paneelType = 430; /* We gaan uit van moderne panelen voor de berekening hier */ totaalWp = state.aantalPanelen * paneelType; }
-            const dagelijkseOpbrengst = totaalWp * 0.9 / 365; // Jaaropbrengst per Wp is 0.9 kWh/Wp, gedeeld door 365 dagen
-            const verbruikProfielRaw = [0.03,0.02,0.02,0.02,0.03,0.05,0.07,0.06,0.05,0.04,0.04,0.04,0.05,0.04,0.04,0.05,0.06,0.08,0.09,0.08,0.07,0.06,0.05,0.04];
-            const sumProfiel = verbruikProfielRaw.reduce((a,b) => a + b, 0);
-            const verbruikProfiel = verbruikProfielRaw.map(p => p / sumProfiel); // Normaliseren naar 1
-            const zonneProfiel = [0,0,0,0,0,0.01,0.03,0.06,0.09,0.11,0.13,0.14,0.13,0.12,0.09,0.05,0.03,0.01,0,0,0,0,0,0]; // Niet genormaliseerd
-            const geschaaldVerbruik = verbruikProfiel.map(p => p * totaalDagelijksVerbruik);
-            const geschaaldeOpbrengst = zonneProfiel.map(p => p * dagelijkseOpbrengst);
-            
-            // Berekening van overschot voor batterijgrootte
-            const overschotVoorBatterij = geschaaldeOpbrengst.reduce((sum, opbrengst, i) => {
-                const overschot = opbrengst - geschaaldVerbruik[i];
-                return sum + (overschot > 0 ? overschot : 0);
-            }, 0);
-            const batterijCapaciteit = Math.max(5, Math.ceil(overschotVoorBatterij / 5) * 5); // Minimum 5 kWh, afronden op 5 kWh
-
-            return { batterijCapaciteit, geschaaldVerbruik, geschaaldeOpbrengst, jaarlijksVerbruikKwh, overschotVoorBatterij };
-        }
-
-        function updateDashboardUI(state, calcs) {
-            document.getElementById('verbruikValue').textContent = `${state.basisVerbruikKwh} kWh`;
-            document.getElementById('panelenValue').textContent = `${state.aantalPanelen}`;
-            document.getElementById('capaciteitResultaat').textContent = `${calcs.batterijCapaciteit.toFixed(1)} kWh`;
-            
-            document.getElementById('totaalVerbruikUitleg').innerHTML = `Basisverbruik: <strong>${state.basisVerbruikKwh} kWh</strong><br>+ E-Auto: <strong>${state.evVerbruikKwh} kWh</strong><br>+ Warmtepomp: <strong>${state.wpVerbruikKwh} kWh</strong><br><hr>Totaal: <strong>${calcs.jaarlijksVerbruikKwh.toFixed(0)} kWh</strong>`;
-            
-            let samenvatting = `Uw geschatte jaarlijkse energieverbruik is <strong>${calcs.jaarlijksVerbruikKwh.toFixed(0)} kWh</strong>. `;
-            if(state.aantalPanelen > 0) {
-                 samenvatting += `Met uw <strong>${state.aantalPanelen} zonnepanelen</strong> wekt u overdag veel van uw eigen stroom op. Gemiddeld heeft u een dagelijks zonne-overschot van ongeveer <strong>${calcs.overschotVoorBatterij.toFixed(1)} kWh</strong>. Dit overschot is ideaal om op te slaan in een thuisbatterij.`;
-                 samenvatting += ` Om dit overschot optimaal te benutten en zo min mogelijk stroom terug te leveren aan het net, adviseren wij een batterij van <strong>${calcs.batterijCapaciteit.toFixed(1)} kWh</strong>. Hiermee verhoogt u uw zelfvoorziening aanzienlijk en bespaart u op uw energierekening.`;
-            } else {
-                 samenvatting += `Zonder zonnepanelen is een thuisbatterij voornamelijk interessant in combinatie met een dynamisch energiecontract, om stroom in te kopen wanneer het goedkoop is en te gebruiken wanneer het duurder is. Een basiscapaciteit van <strong>${calcs.batterijCapaciteit.toFixed(1)} kWh</strong> is hiervoor een goed startpunt. Overweegt u in de toekomst zonnepanelen? Dan is een batterij van dit formaat een slimme investering die later maximaal rendeert.`;
-            }
-            document.getElementById('adviesSamenvatting').innerHTML = samenvatting;
-
-            const displayPanels = state.aantalPanelen > 0;
-            document.getElementById('scenario2Div').style.display = displayPanels ? 'block' : 'none';
-            document.getElementById('scenario3Div').style.display = displayPanels ? 'block' : 'none';
-
-            if(!displayPanels) {
-                document.getElementById('scenario2Div').innerHTML = `<div class="placeholder-message">Voeg zonnepanelen toe om te zien hoe u uw eigen stroom opwekt.</div>`;
-                document.getElementById('scenario3Div').innerHTML = `<div class="placeholder-message">Voeg zonnepanelen toe om de impact van een thuisbatterij op uw zelfverbruik te zien.</div>`;
-            } else {
-                 // Restore original content if panels are added
-                 if (!document.getElementById('scenario2ChartCanvas')) { // Check if canvas exists, if not, restore HTML
-                    document.getElementById('scenario2Div').innerHTML = `
-                        <h3>Scenario 2: Met Zonnepanelen</h3>
-                        <p class="chart-explanation">Met zonnepanelen wekt u overdag uw eigen stroom op (gele lijn). Het deel van deze opgewekte stroom dat u direct verbruikt, is uw gratis 'eigen verbruik' (groen). De stroom die u over heeft en niet direct verbruikt, wordt teruggeleverd aan het net (paars, onder de nullijn). U krijgt hiervoor meestal een vergoeding.</p>
-                        <div class="chart-canvas-container" id="scenario2CanvasContainer"><canvas id="scenario2ChartCanvas"></canvas></div>
-                        <div class="chart-summary" id="summary2"></div>`;
-                    document.getElementById('scenario3Div').innerHTML = `
-                        <h3>Scenario 3: Met Zonnepanelen & Thuisbatterij</h3>
-                        <p class="chart-explanation">Dit scenario optimaliseert uw energiegebruik. De gele lijn is opnieuw uw zonne-opbrengst. Het overschot aan zonnestroom dat u niet direct verbruikt, wordt nu niet teruggeleverd maar gebruikt om de batterij op te laden (gele balken, onder de nullijn). Wanneer de zon niet schijnt (bijv. 's avonds), verbruikt u de opgeslagen energie uit uw batterij (lichtblauwe balken). Hierdoor bent u veel minder afhankelijk van het net en bespaart u meer.</p>
-                        <div class="chart-canvas-container" id="scenario3CanvasContainer"><canvas id="scenario3ChartCanvas"></canvas></div>
-                        <div class="chart-summary" id="summary3"></div>`;
-                 }
-            }
-            renderScenario1Chart(calcs.geschaaldVerbruik);
-            if(displayPanels) {
-                renderScenario2Chart(calcs.geschaaldVerbruik, calcs.geschaaldeOpbrengst);
-                renderScenario3Chart(calcs.geschaaldVerbruik, calcs.geschaaldeOpbrengst, calcs.batterijCapaciteit);
-            }
-        }
-        
-        function renderScenario1Chart(verbruikData) {
-            const ctx = document.getElementById('scenario1ChartCanvas').getContext('2d');
-            const totalImport = verbruikData.reduce((a, b) => a + b, 0);
-            document.getElementById('summary1').innerHTML = `<div class="summary-item" style="color:#e74c3c;"><strong>${(totalImport * 365).toFixed(0)} kWh/j</strong>Import van Net</div>`;
-            if (scenario1Chart) scenario1Chart.destroy();
-            scenario1Chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Array.from({length: 24}, (_, i) => `${i}:00`),
-                    datasets: [{
-                        label: 'Import van Net',
-                        data: verbruikData,
-                        backgroundColor: 'rgba(231, 76, 60, 0.7)' // Rood voor import
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            stacked: true,
-                            beginAtZero: true,
-                            title: {display: true, text: 'Energie (kWh)'}
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false }
-                    }
-                }
-            });
-        }
-        
-        function renderScenario2Chart(verbruikData, opbrengstData) {
-            const ctx = document.getElementById('scenario2ChartCanvas').getContext('2d');
-            let totalImport = 0, totalExport = 0, totalDirectVerbruik = 0;
-            for(let i=0; i<24; i++) {
-                const direct = Math.min(verbruikData[i], opbrengstData[i]);
-                totalImport += Math.max(0, verbruikData[i] - opbrengstData[i]);
-                totalExport += Math.max(0, opbrengstData[i] - verbruikData[i]);
-                totalDirectVerbruik += direct;
-            }
-            document.getElementById('summary2').innerHTML = `<div class="summary-item" style="color:#e74c3c;"><strong>${(totalImport*365).toFixed(0)} kWh/j</strong>Import</div> <div class="summary-item" style="color:#2ecc71;"><strong>${(totalDirectVerbruik*365).toFixed(0)} kWh/j</strong>Eigen Verbruik</div> <div class="summary-item" style="color:#9b59b6;"><strong>${(totalExport*365).toFixed(0)} kWh/j</strong>Export</div>`;
-            if (scenario2Chart) scenario2Chart.destroy();
-            scenario2Chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Array.from({length: 24}, (_, i) => `${i}:00`),
-                    datasets: [
-                        {
-                            label: 'Eigen Verbruik Zon',
-                            data: verbruikData.map((v,i) => Math.min(v, opbrengstData[i])),
-                            backgroundColor: 'rgba(46, 204, 113, 0.7)', // Groen voor direct verbruik van zon
-                            order: 2
-                        },
-                        {
-                            label: 'Import van Net',
-                            data: verbruikData.map((v,i) => Math.max(0, v-opbrengstData[i])),
-                            backgroundColor: 'rgba(231, 76, 60, 0.7)', // Rood voor import
-                            order: 2
-                        },
-                        {
-                            label: 'Export naar Net',
-                            data: opbrengstData.map((o, i) => -Math.max(0, o - verbruikData[i])),
-                            backgroundColor: 'rgba(155, 89, 182, 0.7)', // Paars voor export (negatief)
-                            order: 2
-                        },
-                        {
-                            type: 'line',
-                            label: 'Zon-opbrengst',
-                            data: opbrengstData,
-                            borderColor: 'rgba(241, 196, 15, 1)', // Gele lijn voor totale zon-opbrengst
-                            borderWidth: 2,
-                            fill: false,
-                            tension: 0.4,
-                            pointRadius: 0,
-                            order: 1 // Lijn boven de bars
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: {
-                        x: { stacked: true },
-                        y: { stacked: true, beginAtZero: false, title: {display: true, text: 'Energie (kWh)'} }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-        }
-
-        function renderScenario3Chart(verbruikData, opbrengstData, batterijCapaciteit) {
-            const ctx = document.getElementById('scenario3ChartCanvas').getContext('2d');
-            let totalImport = 0, totalExportNaBatt = 0, batterijLading = 0, totalDirectVerbruik = 0, totalBattVerbruik = 0;
-            const importData = [], directVerbruikData = [], battVerbruikData = [], battLaadData = [];
-
-            // Simuleer een dag met batterij
-            for (let i = 0; i < 24; i++) {
-                const verbruik = verbruikData[i];
-                const opbrengst = opbrengstData[i];
-
-                // 1. Direct eigen verbruik
-                const direct = Math.min(verbruik, opbrengst);
-                directVerbruikData.push(direct);
-                totalDirectVerbruik += direct;
-
-                const nettoNaDirect = opbrengst - verbruik; // Positief = overschot, Negatief = tekort
-
-                let ontlading = 0;
-                let imp = 0;
-                let lading = 0;
-
-                if (nettoNaDirect > 0) { // Overschot aan zonnestroom
-                    const kanLaden = batterijCapaciteit - batterijLading;
-                    lading = Math.min(nettoNaDirect, kanLaden); // Laad de batterij op
-                    batterijLading += lading;
-                    totalExportNaBatt += (nettoNaDirect - lading); // Wat overblijft gaat naar het net
-                    battLaadData.push(-lading); // Negatief om onder de nullijn te tonen
-                } else if (nettoNaDirect < 0) { // Tekort aan stroom
-                    const tekort = -nettoNaDirect;
-                    const kanOntladen = batterijLading;
-                    ontlading = Math.min(tekort, kanOntladen); // Ontlaad de batterij
-                    batterijLading -= ontlading;
-                    imp = tekort - ontlading; // Wat overblijft komt van het net
-                    battLaadData.push(0); // Niet laden
-                } else { // Balans
-                    battLaadData.push(0);
-                }
-                
-                battVerbruikData.push(ontlading);
-                importData.push(imp);
-                totalBattVerbruik += ontlading;
-                totalImport += imp;
-            }
-            
-            document.getElementById('summary3').innerHTML = `<div class="summary-item" style="color:#e74c3c;"><strong>${(totalImport*365).toFixed(0)} kWh/j</strong>Import</div> <div class="summary-item" style="color:#2ecc71;"><strong>${((totalDirectVerbruik + totalBattVerbruik)*365).toFixed(0)} kWh/j</strong>Eigen Verbruik</div> <div class="summary-item" style="color:#9b59b6;"><strong>${(totalExportNaBatt*365).toFixed(0)} kWh/j</strong>Export</div>`;
-            
-            if (scenario3Chart) scenario3Chart.destroy();
-            scenario3Chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Array.from({length: 24}, (_, i) => `${i}:00`),
-                    datasets: [
-                        {
-                            label: 'Eigen Verbruik Zon',
-                            data: directVerbruikData,
-                            backgroundColor: 'rgba(46, 204, 113, 0.7)', // Groen voor direct verbruik van zon
-                            order: 2
-                        },
-                        {
-                            label: 'Verbruik uit Batterij',
-                            data: battVerbruikData,
-                            backgroundColor: 'rgba(52, 152, 219, 0.7)', // Lichtblauw voor verbruik uit batterij
-                            order: 2
-                        },
-                        {
-                            label: 'Import van Net',
-                            data: importData,
-                            backgroundColor: 'rgba(231, 76, 60, 0.7)', // Rood voor import
-                            order: 2
-                        },
-                        {
-                            label: 'Laden Batterij',
-                            data: battLaadData,
-                            backgroundColor: 'rgba(241, 196, 15, 0.7)', // Geel voor laden batterij (negatief)
-                            order: 2
-                        },
-                        {
-                            type: 'line',
-                            label: 'Zon-opbrengst',
-                            data: opbrengstData,
-                            borderColor: 'rgba(241, 196, 15, 1)', // Gele lijn voor totale zon-opbrengst
-                            borderWidth: 2,
-                            fill: false,
-                            tension: 0.4,
-                            pointRadius: 0,
-                            order: 1 // Lijn boven de bars
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: {
-                        x: { stacked: true },
-                        y: {
-                            stacked: true,
-                            beginAtZero: false,
-                            title: {display: true, text: 'Energie (kWh)'},
-                            min: -batterijCapaciteit // Zorg dat laden onder de nullijn zichtbaar is
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { mode: 'index' }
-                    }
-                }
-            });
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
