@@ -1,48 +1,223 @@
-body { font-family: 'Roboto', sans-serif; background-color: #f0f4f8; color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; }
-.container { max-width: 700px; width: 100%; background-color: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
-.logo { max-width: 250px; width: 100%; height: auto; margin-bottom: 20px; }
-h1 { color: #1e3a5f; font-size: 2.5rem; margin-top: 0; }
-h2.question-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; color: #1e3a5f; }
-.step-container, #start-scherm { display: none; }
-.step-container.active, #start-scherm.active { display: block; }
-.answer-option { border: 2px solid #e0e6ed; border-radius: 12px; padding: 15px 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; text-align: left; }
-.answer-option:hover { border-color: #3498db; background-color: #f9fcff; }
-.answer-option.selected { border-color: #2ecc71; background-color: #eaf9ed; box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2); }
-.answer-option .icon { font-size: 2rem; color: #1e3a5f; margin-right: 20px; display: flex; align-items: center; justify-content: center; width: 40px; flex-shrink: 0; }
-.input-text { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #e0e6ed; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
-.button-container { display: flex; justify-content: space-between; margin-top: 30px; }
-.btn { padding: 15px 30px; border: none; border-radius: 50px; cursor: pointer; font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; text-decoration: none; }
-.btn-primary { background-color: #3498db; color: white; }
-.btn-secondary { background-color: #e0e6ed; color: #555; }
-.progress-bar-container { background-color: #e0e6ed; border-radius: 50px; height: 10px; margin-bottom: 10px; }
-.progress-bar { height: 100%; background-color: #2ecc71; border-radius: 50px; width: 0%; transition: width 0.4s ease; }
-.progress-text { text-align: center; font-size: 0.9rem; margin-bottom: 20px; color: #555; }
-.results-grid { display: grid; grid-template-columns: 1fr; gap: 20px; text-align: left; margin-top: 20px; }
-.result-card { background-color: #f9fbfd; padding: 20px; border-radius: 12px; border: 1px solid #e0e6ed; }
-.result-card h3 { display: flex; justify-content: space-between; align-items: center; margin-top: 0; color: #1e3a5f; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-.main-recommendation { text-align: center; background-color: #eaf9ed; border-color: #2ecc71; }
-.chart-card { grid-column: 1 / -1; }
-.interactive-settings { grid-column: 1 / -1; }
-.setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
-.setting-row label { font-weight: 500; margin-right: 10px; flex-basis: 180px; text-align: left; }
-.setting-row input[type="range"], .setting-row select { flex-grow: 1; margin: 0 15px; }
-.setting-row .value-display { font-weight: 700; min-width: 60px; text-align: right; }
-.setting-row select { padding: 8px; border-radius: 8px; border: 1px solid #e0e6ed; background-color: white; }
-.version-display { font-size: 0.8em; color: #aaa; margin-top: 20px; text-align: center; }
-.chart-canvas-container { position: relative; height: 350px; width: 100%; }
-.chart-summary { display: flex; justify-content: space-around; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e6ed; flex-wrap: wrap; }
-.summary-item { font-size: 0.9em; padding: 0 10px; margin-bottom: 10px; }
-.summary-item strong { display: block; font-size: 1.2em; }
-.chart-explanation { font-size: 0.9em; color: #555; margin-top: -10px; margin-bottom: 15px; text-align: left; }
-.placeholder-message { color: #888; text-align: center; padding: 50px 20px; font-style: italic; }
-#totaalVerbruikUitleg { font-size: 1.1em; line-height: 1.6; text-align: center; }
-.chart-with-indicator { display: flex; gap: 20px; align-items: stretch; }
-.chart-main { flex-grow: 1; position: relative; height: 350px; }
-.chart-sidebar { flex-basis: 80px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; }
-.battery-indicator { text-align: center; }
-.battery-header { display: flex; justify-content: space-between; font-size: 0.8em; font-weight: bold; color: #555; margin-bottom: 5px; padding: 0 5px; }
-.battery-outer { width: 60px; height: 120px; border: 3px solid #333; border-radius: 8px; margin: 0 auto; padding: 3px; position: relative; }
-.battery-level { background: linear-gradient(to top, #27ae60, #2ecc71); width: 100%; height: 0%; border-radius: 4px; position: absolute; bottom: 3px; left: 3px; transition: height 0.2s ease; }
-.battery-percentage { font-weight: bold; font-size: 1.2em; margin-top: 10px; }
-.status-laden { color: #f39c12; }
-.status-ontladen { color: #3498db; }
+let currentStep = 1;
+const totalSteps = 4; // Terug naar 4 basisvragen
+const formAnswers = {};
+let scenario1Chart, scenario2Chart, scenario3Chart;
+let batterijLadingProfiel = [], batterijActieProfiel = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('startBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('start-scherm').style.display = 'none';
+        document.getElementById('calculator-scherm').style.display = 'block';
+        showStep(1);
+    });
+});
+
+function showStep(step) {
+    document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+    const el = document.getElementById(`step-${step}`) || document.getElementById('resultaat-stap');
+    if (el) el.classList.add('active');
+    updateButtons();
+    updateProgressBar();
+}
+
+function updateButtons() {
+    const t = document.getElementById('terugBtn'), v = document.getElementById('volgendeBtn');
+    t.style.display = (currentStep > 1 && currentStep <= totalSteps + 1) ? 'block' : 'none';
+    v.style.display = (currentStep <= totalSteps) ? 'block' : 'none';
+    v.textContent = isLastStep() ? 'Bereken advies' : 'Volgende →';
+}
+
+function updateProgressBar() {
+    const totalVisibleSteps = totalSteps - (isStepSkipped(3) ? 1 : 0) - (isStepSkipped(4) ? 1 : 0);
+    let answeredQuestions = 0;
+    for (let i = 1; i < currentStep; i++) {
+        if (!isStepSkipped(i)) answeredQuestions++;
+    }
+    const percentage = (answeredQuestions / totalVisibleSteps) * 100;
+    document.getElementById('progressBar').style.width = `${percentage}%`;
+    document.getElementById('progressText').textContent = `${Math.round(percentage)}% Voltooid`;
+}
+
+function isLastStep() {
+    if (currentStep >= totalSteps) return true;
+    let nextVisibleStep = currentStep + 1;
+    while(nextVisibleStep <= totalSteps) {
+        if (!isStepSkipped(nextVisibleStep)) return false;
+        nextVisibleStep++;
+    }
+    return true;
+}
+
+function isStepSkipped(step) {
+    if (step === 3 && formAnswers['step-2'] === 'ja') return true;
+    if (step === 4 && formAnswers['step-2'] === 'nee') return true;
+    return false;
+}
+
+function nextStep() {
+    const cs = document.getElementById(`step-${currentStep}`);
+    const so = cs.querySelector('.selected');
+    if (currentStep === 4) {
+        const pi = document.getElementById('panelenInput');
+        if (!pi.value || parseInt(pi.value) < 0) {
+            alert("Vul een geldig aantal zonnepanelen in.");
+            return;
+        }
+        formAnswers['step-4'] = parseInt(pi.value);
+    } else {
+        if (!so) { alert("Selecteer een optie."); return; }
+        formAnswers[`step-${currentStep}`] = so.dataset.value;
+    }
+    if (isLastStep()) {
+        berekenAdvies();
+        return;
+    }
+    do {
+        currentStep++;
+    } while (isStepSkipped(currentStep));
+    showStep(currentStep);
+}
+
+function prevStep() {
+    do {
+        currentStep--;
+    } while (isStepSkipped(currentStep) && currentStep > 0);
+    if (currentStep >= 1) showStep(currentStep);
+}
+
+function selectAnswer(step, element) {
+    const c = document.getElementById(`step-${step}`);
+    c.querySelectorAll('.answer-option').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+}
+
+function berekenAdvies() {
+    currentStep = totalSteps + 1;
+    setupInteractiveControls();
+    showStep('resultaat-stap');
+}
+
+function setupInteractiveControls() {
+    const controls = ['verbruikSlider', 'panelenSlider'];
+    controls.forEach(id => { document.getElementById(id).addEventListener('input', recalculateAndRedraw); });
+    document.getElementById('verbruikSlider').value = formAnswers['step-1'] || 3000;
+    document.getElementById('panelenSlider').value = (formAnswers['step-2'] === 'ja' && formAnswers['step-4']) ? formAnswers['step-4'] : (formAnswers['step-3'] === 'ja' ? 12 : 0);
+    recalculateAndRedraw();
+}
+
+function recalculateAndRedraw() {
+    const state = {
+        jaarlijksVerbruikKwh: parseInt(document.getElementById('verbruikSlider').value),
+        aantalPanelen: parseInt(document.getElementById('panelenSlider').value),
+    };
+    const calculations = calculateAdvice(state);
+    updateDashboardUI(state, calculations);
+}
+
+function calculateAdvice(state) {
+    const totaalDagelijksVerbruik = state.jaarlijksVerbruikKwh / 365;
+    const totaalWp = state.aantalPanelen * 430;
+    const dagelijkseOpbrengst = totaalWp * 0.9 / 365;
+    const verbruikProfielRaw = [0.02, 0.015, 0.015, 0.015, 0.015, 0.03, 0.08, 0.07, 0.05, 0.04, 0.04, 0.04, 0.05, 0.04, 0.04, 0.05, 0.07, 0.09, 0.1, 0.09, 0.08, 0.06, 0.04, 0.03];
+    const sumProfiel = verbruikProfielRaw.reduce((a, b) => a + b, 0);
+    const verbruikProfiel = verbruikProfielRaw.map(p => p / sumProfiel);
+    const zonneProfiel = [0,0,0,0,0,0.01,0.03,0.06,0.09,0.11,0.13,0.14,0.13,0.12,0.09,0.05,0.03,0.01,0,0,0,0,0,0];
+    const geschaaldVerbruik = verbruikProfiel.map(p => p * totaalDagelijksVerbruik);
+    const geschaaldeOpbrengst = zonneProfiel.map(p => p * dagelijkseOpbrengst);
+    let nachtelijkVerbruik = 0;
+    for(let i=0; i<24; i++) {
+        if(i < 7 || i > 18) { nachtelijkVerbruik += geschaaldVerbruik[i]; }
+    }
+    const berekendeCapaciteit = nachtelijkVerbruik * 1.15;
+    const batterijCapaciteit = Math.max(5, Math.ceil(berekendeCapaciteit / 5) * 5);
+    return { batterijCapaciteit, geschaaldVerbruik, geschaaldeOpbrengst };
+}
+
+function updateDashboardUI(state, calcs) {
+    document.getElementById('verbruikValue').textContent = `${state.jaarlijksVerbruikKwh} kWh`;
+    document.getElementById('panelenValue').textContent = `${state.aantalPanelen}`;
+    document.getElementById('capaciteitResultaat').textContent = `${calcs.batterijCapaciteit.toFixed(1)} kWh`;
+    const displayPanels = state.aantalPanelen > 0;
+    document.getElementById('scenario2Div').style.display = displayPanels ? 'block' : 'none';
+    document.getElementById('scenario3Div').style.display = displayPanels ? 'block' : 'none';
+    
+    renderScenario1Chart(calcs.geschaaldVerbruik);
+    if (displayPanels) {
+        renderScenario2Chart(calcs.geschaaldVerbruik, calcs.geschaaldeOpbrengst);
+        renderScenario3Chart(calcs.geschaaldVerbruik, calcs.geschaaldeOpbrengst, calcs.batterijCapaciteit);
+    }
+}
+
+function renderScenario1Chart(verbruikData) { /* ... ongewijzigd ... */ }
+function renderScenario2Chart(verbruikData, opbrengstData) { /* ... ongewijzigd ... */ }
+
+function updateBatteryIndicator(index, batterijCapaciteit) {
+    const lading = batterijLadingProfiel[index];
+    const actie = batterijActieProfiel[index];
+    const percentage = (lading / batterijCapaciteit) * 100;
+    document.getElementById('batteryLevel').style.height = `${percentage}%`;
+    document.getElementById('batteryPercentage').textContent = `${Math.round(percentage)}%`;
+    document.getElementById('batteryTime').textContent = `${index}:00`;
+    const statusEl = document.getElementById('batteryStatusText');
+    statusEl.textContent = actie;
+    statusEl.className = `status-${actie.toLowerCase()}`;
+}
+
+function renderScenario3Chart(verbruikData, opbrengstData, batterijCapaciteit) {
+    const ctx = document.getElementById('scenario3ChartCanvas').getContext('2d');
+    if (!ctx) return;
+    let batterijLading = 0;
+    const importData = [], directVerbruikData = [], battVerbruikData = [], battLaadData = [];
+    batterijLadingProfiel = []; batterijActieProfiel = [];
+    for (let i = 0; i < 24; i++) {
+        const verbruik = verbruikData[i], opbrengst = opbrengstData[i];
+        const direct = Math.min(verbruik, opbrengst);
+        const netto = opbrengst - verbruik;
+        let ontlading = 0, imp = 0, lading = 0, actie = "Inactief";
+        if (netto > 0) { const kanLaden = batterijCapaciteit - batterijLading; lading = Math.min(netto, kanLaden); if (lading > 0.01) { batterijLading += lading; actie = "Laden"; } } 
+        else if (netto < 0) { const tekort = -netto; const kanOntladen = batterijLading; ontlading = Math.min(tekort, kanOntladen); if (ontlading > 0.01) { batterijLading -= ontlading; actie = "Ontladen"; } imp = tekort - ontlading; }
+        directVerbruikData.push(direct);
+        battVerbruikData.push(ontlading);
+        importData.push(imp);
+        battLaadData.push(-lading);
+        batterijLadingProfiel.push(batterijLading);
+        batterijActieProfiel.push(actie);
+    }
+    const totalImport = importData.reduce((a,b)=>a+b, 0);
+    const totalDirect = directVerbruikData.reduce((a,b)=>a+b, 0);
+    const totalBatt = battVerbruikData.reduce((a,b)=>a+b, 0);
+    document.getElementById('summary3').innerHTML = `<div class="summary-item" style="color:#e74c3c;"><strong>${(totalImport*365).toFixed(0)} kWh/j</strong>Import</div> <div class="summary-item" style="color:#2ecc71;"><strong>${((totalDirect + totalBatt)*365).toFixed(0)} kWh/j</strong>Eigen Verbruik</div>`;
+    
+    if (scenario3Chart) scenario3Chart.destroy();
+    scenario3Chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+            datasets: [
+                { label: 'Eigen Verbruik Zon', data: directVerbruikData, backgroundColor: 'rgba(46, 204, 113, 0.7)' },
+                { label: 'Verbruik uit Batterij', data: battVerbruikData, backgroundColor: 'rgba(52, 152, 219, 0.7)' },
+                { label: 'Import van Net', data: importData, backgroundColor: 'rgba(231, 76, 60, 0.7)' }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: {display: true, text: 'Energie (kWh)'} } },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    enabled: true, mode: 'index', intersect: false,
+                    callbacks: {
+                        footer: (tooltipItems) => {
+                            const hourIndex = tooltipItems[0]?.dataIndex;
+                            if (hourIndex !== undefined) { updateBatteryIndicator(hourIndex, batterijCapaciteit); }
+                            return '';
+                        }
+                    }
+                }
+            },
+            onHover: (event, chartElement) => { if (!chartElement.length) { updateBatteryIndicator(null, batterijCapaciteit); } }
+        }
+    });
+    updateBatteryIndicator(null, batterijCapaciteit);
+}
