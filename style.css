@@ -2,6 +2,7 @@ body { font-family: 'Roboto', sans-serif; background-color: #f0f4f8; color: #333
 .container { max-width: 700px; width: 100%; background-color: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
 .logo { max-width: 250px; width: 100%; height: auto; margin-bottom: 20px; }
 h1 { color: #1e3a5f; font-size: 2.5rem; margin-top: 0; }
+h2.question-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; color: #1e3a5f; }
 .results-grid { display: grid; grid-template-columns: 1fr; gap: 20px; text-align: left; margin-top: 20px; }
 .result-card { background-color: #f9fbfd; padding: 20px; border-radius: 12px; border: 1px solid #e0e6ed; }
 .result-card h3 { display: flex; justify-content: space-between; align-items: center; margin-top: 0; color: #1e3a5f; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
@@ -13,8 +14,8 @@ h1 { color: #1e3a5f; font-size: 2.5rem; margin-top: 0; }
 .setting-row input[type="range"], .setting-row select { flex-grow: 1; margin: 0; }
 .setting-row .value-display { font-weight: 700; min-width: 60px; text-align: right; }
 .setting-row select { padding: 8px; border-radius: 8px; border: 1px solid #e0e6ed; background-color: white; font-size: 1em; }
-.version-display { font-size: 0.8em; color: #aaa; margin-top: 20px; text-align: center; }
 .chart-canvas-container { position: relative; height: 350px; width: 100%; }
 .chart-summary { display: flex; justify-content: space-around; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e6ed; flex-wrap: wrap; }
 .summary-item { font-size: 0.9em; padding: 0 10px; margin-bottom: 10px; }
 .summary-item strong { display: block; font-size: 1.2em; }
+#totaalVerbruikUitleg { font-size: 1.1em; line-height: 1.6; text-align: center; padding: 10px 0; }
