@@ -1,3 +1,6 @@
+let currentStep = 1;
+const totalSteps = 4;
+const formAnswers = {};
 let scenario1Chart, scenario2Chart, scenario3Chart;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -5,32 +8,102 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         document.getElementById('start-scherm').style.display = 'none';
         document.getElementById('calculator-scherm').style.display = 'block';
-        showStep('resultaat-stap');
+        showStep(1);
     });
-    setupInteractiveControls();
 });
 
 function showStep(step) {
     document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
-    document.getElementById(step)?.classList.add('active');
+    const el = document.getElementById(`step-${step}`) || document.getElementById('resultaat-stap');
+    if (el) el.classList.add('active');
+    updateButtons();
+    updateProgressBar();
+}
+
+function updateButtons() {
+    const t = document.getElementById('terugBtn'), v = document.getElementById('volgendeBtn');
+    t.style.display = (currentStep > 1 && currentStep <= totalSteps + 1) ? 'block' : 'none';
+    v.style.display = (currentStep <= totalSteps) ? 'block' : 'none';
+    v.textContent = isLastStep() ? 'Bereken advies' : 'Volgende →';
+}
+
+function updateProgressBar() {
+    const totalVisibleSteps = totalSteps - (isStepSkipped(3) ? 1 : 0) - (isStepSkipped(4) ? 1 : 0);
+    let answeredQuestions = 0;
+    for (let i = 1; i < currentStep; i++) {
+        if (!isStepSkipped(i)) answeredQuestions++;
+    }
+    const percentage = (answeredQuestions / totalVisibleSteps) * 100;
+    document.getElementById('progressBar').style.width = `${percentage}%`;
+    document.getElementById('progressText').textContent = `${Math.round(percentage)}% Voltooid`;
+}
+
+function isLastStep() {
+    let nextVisibleStep = currentStep + 1;
+    while(nextVisibleStep <= totalSteps) {
+        if (!isStepSkipped(nextVisibleStep)) return false;
+        nextVisibleStep++;
+    }
+    return true;
+}
+
+function isStepSkipped(step) {
+    if (step === 3 && formAnswers['step-2'] === 'ja') return true;
+    if (step === 4 && formAnswers['step-2'] === 'nee') return true;
+    return false;
+}
+
+function nextStep() {
+    const cs = document.getElementById(`step-${currentStep}`);
+    const so = cs.querySelector('.selected');
+    if (currentStep === 4) {
+        const pi = document.getElementById('panelenInput');
+        if (!pi.value || parseInt(pi.value) < 0) {
+            alert("Vul een geldig aantal zonnepanelen in.");
+            return;
+        }
+        formAnswers['step-4'] = parseInt(pi.value);
+    } else {
+        if (!so) { alert("Selecteer een optie."); return; }
+        formAnswers[`step-${currentStep}`] = so.dataset.value;
+    }
+    if (isLastStep()) {
+        berekenAdvies();
+        return;
+    }
+    do {
+        currentStep++;
+    } while (isStepSkipped(currentStep));
+    showStep(currentStep);
+}
+
+function prevStep() {
+    do {
+        currentStep--;
+    } while (isStepSkipped(currentStep) && currentStep > 0);
+    if (currentStep >= 1) showStep(currentStep);
+}
+
+function selectAnswer(step, element) {
+    const c = document.getElementById(`step-${step}`);
+    c.querySelectorAll('.answer-option').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+}
+
+function berekenAdvies() {
+    currentStep = totalSteps + 1;
+    setupInteractiveControls();
+    showStep('resultaat-stap');
 }
 
 function setupInteractiveControls() {
-    const controls = ['verbruikSlider', 'panelenSlider', 'evToggle', 'wpToggle'];
+    const controls = ['verbruikSlider', 'panelenSlider'];
     controls.forEach(id => {
         const el = document.getElementById(id);
-        if (el) {
-            const eventType = (el.type === 'range') ? 'input' : 'change';
-            el.addEventListener(eventType, recalculateAndRedraw);
-        }
+        if(el) el.addEventListener('input', recalculateAndRedraw);
     });
-    document.getElementById('verbruikSlider').value = 3500;
-    document.getElementById('panelenSlider').value = 12;
-    recalculateAndRedraw();
-}
-
-function setVerbruik(value) {
-    document.getElementById('verbruikSlider').value = value;
+    document.getElementById('verbruikSlider').value = formAnswers['step-1'] || 3000;
+    document.getElementById('panelenSlider').value = (formAnswers['step-2'] === 'ja' && formAnswers['step-4']) ? formAnswers['step-4'] : (formAnswers['step-3'] === 'ja' ? 12 : 0);
     recalculateAndRedraw();
 }
 
@@ -38,18 +111,13 @@ function recalculateAndRedraw() {
     const state = {
         jaarlijksVerbruikKwh: parseInt(document.getElementById('verbruikSlider').value),
         aantalPanelen: parseInt(document.getElementById('panelenSlider').value),
-        heeftEV: document.getElementById('evToggle').checked,
-        heeftWarmtepomp: document.getElementById('wpToggle').checked
     };
     const calculations = calculateAdvice(state);
     updateDashboardUI(state, calculations);
 }
 
 function calculateAdvice(state) {
-    const evVerbruik = state.heeftEV ? 3600 : 0;
-    const wpVerbruik = state.heeftWarmtepomp ? 2500 : 0;
-    const totaalJaarlijksVerbruik = state.jaarlijksVerbruikKwh + evVerbruik + wpVerbruik;
-    const totaalDagelijksVerbruik = totaalJaarlijksVerbruik / 365;
+    const totaalDagelijksVerbruik = state.jaarlijksVerbruikKwh / 365;
     const totaalWp = state.aantalPanelen * 430;
     const dagelijkseOpbrengst = totaalWp * 0.9 / 365;
     const verbruikProfielRaw = [0.03,0.02,0.02,0.02,0.03,0.05,0.07,0.06,0.05,0.04,0.04,0.04,0.05,0.04,0.04,0.05,0.06,0.08,0.09,0.08,0.07,0.06,0.05,0.04];
@@ -70,7 +138,7 @@ function updateDashboardUI(state, calcs) {
     document.getElementById('verbruikValue').textContent = `${state.jaarlijksVerbruikKwh} kWh`;
     document.getElementById('panelenValue').textContent = `${state.aantalPanelen}`;
     document.getElementById('capaciteitResultaat').textContent = `${calcs.batterijCapaciteit.toFixed(1)} kWh`;
-    
+
     const displayPanels = state.aantalPanelen > 0;
     document.getElementById('scenario2Div').style.display = displayPanels ? 'block' : 'none';
     document.getElementById('scenario3Div').style.display = displayPanels ? 'block' : 'none';
