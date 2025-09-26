@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thuisbatterij Calculator V1.0</title>
+    <title>Thuisbatterij Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="calculator-scherm" class="container">
+    <div class="container">
         <img src="exclupower-logo.jpg" alt="Exclupower Bedrijfslogo" class="logo">
         <h1>Thuisbatterij Calculator</h1>
         
@@ -21,13 +21,13 @@
                 <div class="setting-row"> <label for="evSelect">Elektrische auto</label> <select id="evSelect"> <option value="0">Geen</option> <option value="1800">Weinig (tot 10.000 km/j)</option> <option value="3600">Gemiddeld (10-20.000 km/j)</option> <option value="5400">Veel (20.000+ km/j)</option> </select> </div>
                 <div class="setting-row"> <label for="wpSelect">Warmtepomp</label> <select id="wpSelect"> <option value="0">Geen</option> <option value="1500">Appartement</option> <option value="2500">Tussenwoning</option> <option value="3500">Hoekwoning / 2-onder-1-kap</option> <option value="4500">Vrijstaand</option> </select> </div>
             </div>
+            <div class="result-card"> <h3>Totaal Jaarverbruik</h3> <p id="totaalVerbruikUitleg"></p> </div>
             <div class="chart-card" id="scenario3Div">
                 <h3>Uw Energieprofiel met Thuisbatterij</h3>
                 <div class="chart-canvas-container"><canvas id="scenario3ChartCanvas"></canvas></div>
                 <div class="chart-summary" id="summary3"></div>
             </div>
         </div>
-        <div class="version-display">Versie 1.0</div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
