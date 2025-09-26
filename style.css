@@ -25,13 +25,11 @@ h2.question-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; co
 .interactive-settings { grid-column: 1 / -1; }
 .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
 .setting-row label { font-weight: 500; margin-right: 10px; flex-basis: 180px; text-align: left; }
-.setting-row input[type="range"], .setting-row select { flex-grow: 1; margin: 0 15px; }
+.setting-row input[type="range"] { flex-grow: 1; margin: 0 15px; }
 .setting-row .value-display { font-weight: 700; min-width: 60px; text-align: right; }
-.setting-row select { padding: 8px; border-radius: 8px; border: 1px solid #e0e6ed; background-color: white; }
 .version-display { font-size: 0.8em; color: #aaa; margin-top: 20px; text-align: center; }
 .chart-canvas-container { position: relative; height: 350px; width: 100%; }
 .chart-summary { display: flex; justify-content: space-around; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e6ed; flex-wrap: wrap; }
 .summary-item { font-size: 0.9em; padding: 0 10px; margin-bottom: 10px; }
 .summary-item strong { display: block; font-size: 1.2em; }
 .placeholder-message { color: #888; text-align: center; padding: 50px 20px; font-style: italic; }
-#totaalVerbruikUitleg { font-size: 1.1em; line-height: 1.6; text-align: center; }
