@@ -1,5 +1,5 @@
 let currentStep = 1;
-const totalSteps = 4;
+const totalSteps = 6;
 const formAnswers = {};
 let scenario1Chart, scenario2Chart, scenario3Chart;
 
@@ -39,10 +39,6 @@ function updateProgressBar() {
 }
 
 function isLastStep() {
-    if (currentStep < totalSteps) {
-        if (currentStep === 2 && formAnswers['step-2'] === 'nee') return false;
-        if (currentStep === 2 && formAnswers['step-2'] === 'ja') return false;
-    }
     let nextVisibleStep = currentStep + 1;
     while(nextVisibleStep <= totalSteps) {
         if (!isStepSkipped(nextVisibleStep)) return false;
@@ -101,28 +97,39 @@ function berekenAdvies() {
 }
 
 function setupInteractiveControls() {
-    const controls = ['verbruikSlider', 'panelenSlider'];
+    const controls = ['verbruikSlider', 'panelenSlider', 'evSelect', 'wpSelect'];
     controls.forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.addEventListener('input', recalculateAndRedraw);
+        const eventType = (el.type === 'range' || el.tagName === 'SELECT') ? 'input' : 'change';
+        el.addEventListener(eventType, recalculateAndRedraw);
     });
     document.getElementById('verbruikSlider').value = formAnswers['step-1'] || 3000;
     document.getElementById('panelenSlider').value = (formAnswers['step-2'] === 'ja' && formAnswers['step-4']) ? formAnswers['step-4'] : (formAnswers['step-3'] === 'ja' ? 12 : 0);
+    document.getElementById('evSelect').value = formAnswers['step-5'] === 'ja' ? "3600" : "0";
+    document.getElementById('wpSelect').value = formAnswers['step-6'] === 'ja' ? "2500" : "0";
     recalculateAndRedraw();
 }
 
 function recalculateAndRedraw() {
     const state = {
-        jaarlijksVerbruikKwh: parseInt(document.getElementById('verbruikSlider')?.value) || 3000,
-        aantalPanelen: parseInt(document.getElementById('panelenSlider')?.value) || 0,
+        basisVerbruikKwh: parseInt(document.getElementById('verbruikSlider').value),
+        aantalPanelen: parseInt(document.getElementById('panelenSlider').value),
+        evVerbruikKwh: parseInt(document.getElementById('evSelect').value),
+        wpVerbruikKwh: parseInt(document.getElementById('wpSelect').value),
+        heeftZonnepanelenInitieel: formAnswers['step-2'] === 'ja'
     };
     const calculations = calculateAdvice(state);
     updateDashboardUI(state, calculations);
 }
 
 function calculateAdvice(state) {
-    const totaalDagelijksVerbruik = state.jaarlijksVerbruikKwh / 365;
-    const totaalWp = state.aantalPanelen * 430;
+    const jaarlijksVerbruikKwh = state.basisVerbruikKwh + state.evVerbruikKwh + state.wpVerbruikKwh;
+    const totaalDagelijksVerbruik = jaarlijksVerbruikKwh / 365;
+    let totaalWp = 0;
+    if (state.aantalPanelen > 0) {
+        const paneelType = state.heeftZonnepanelenInitieel ? 400 : 430;
+        totaalWp = state.aantalPanelen * paneelType;
+    }
     const dagelijkseOpbrengst = totaalWp * 0.9 / 365;
     const verbruikProfielRaw = [0.03,0.02,0.02,0.02,0.03,0.05,0.07,0.06,0.05,0.04,0.04,0.04,0.05,0.04,0.04,0.05,0.06,0.08,0.09,0.08,0.07,0.06,0.05,0.04];
     const sumProfiel = verbruikProfielRaw.reduce((a, b) => a + b, 0);
@@ -134,15 +141,18 @@ function calculateAdvice(state) {
         const overschot = opbrengst - geschaaldVerbruik[i];
         return sum + (overschot > 0 ? overschot : 0);
     }, 0);
-    const batterijCapaciteit = Math.max(5, Math.ceil(totaalOverschot / 5) * 5);
+    const afgerondeCapaciteit = Math.ceil(totaalOverschot / 5) * 5;
+    const batterijCapaciteit = Math.max(5, afgerondeCapaciteit);
     return { batterijCapaciteit, geschaaldVerbruik, geschaaldeOpbrengst };
 }
 
 function updateDashboardUI(state, calcs) {
-    document.getElementById('verbruikValue').textContent = `${state.jaarlijksVerbruikKwh} kWh`;
+    document.getElementById('verbruikValue').textContent = `${state.basisVerbruikKwh} kWh`;
     document.getElementById('panelenValue').textContent = `${state.aantalPanelen}`;
     document.getElementById('capaciteitResultaat').textContent = `${calcs.batterijCapaciteit.toFixed(1)} kWh`;
-
+    const totaalVerbruik = state.basisVerbruikKwh + state.evVerbruikKwh + state.wpVerbruikKwh;
+    document.getElementById('totaalVerbruikUitleg').innerHTML = `Basisverbruik: <strong>${state.basisVerbruikKwh} kWh</strong><br>+ E-Auto: <strong>${state.evVerbruikKwh} kWh</strong><br>+ Warmtepomp: <strong>${state.wpVerbruikKwh} kWh</strong><br><hr>Totaal: <strong>${totaalVerbruik.toFixed(0)} kWh</strong>`;
+    
     const displayPanels = state.aantalPanelen > 0;
     document.getElementById('scenario2Div').style.display = displayPanels ? 'block' : 'none';
     document.getElementById('scenario3Div').style.display = displayPanels ? 'block' : 'none';
