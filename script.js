@@ -155,7 +155,7 @@ function updateDashboardUI(state, calcs) {
         document.getElementById('scenario3Div').innerHTML = `<div class="placeholder-message">Voeg zonnepanelen toe om de impact van een thuisbatterij te zien.</div>`;
     } else {
         if (!document.getElementById('scenario2ChartCanvas')) {
-            document.getElementById('scenario2Div').innerHTML = `<h3>Scenario 2: Met Zonnepanelen</h3> <p class="chart-explanation">Met zonnepanelen (gele lijn) wordt uw verbruik overdag deels gedekt door eigen zonnestroom (groen). Het overschot wordt **teruggeleverd** aan het net (paars).</p> <div class="chart-canvas-container" id="scenario2CanvasContainer"><canvas id="scenario2ChartCanvas"></canvas></div> <div class="chart-summary" id="summary2"></div>`;
+            document.getElementById('scenario2Div').innerHTML = `<h3>Scenario 2: Met Zonnepanelen</h3> <p class="chart-explanation">Met zonnepanelen (gele lijn) wordt uw verbruik overdag deels gedekt. Het overschot wordt **teruggeleverd** aan het net (paars).</p> <div class="chart-canvas-container" id="scenario2CanvasContainer"><canvas id="scenario2ChartCanvas"></canvas></div> <div class="chart-summary" id="summary2"></div>`;
             document.getElementById('scenario3Div').innerHTML = `<h3>Scenario 3: Met Zonnepanelen & Thuisbatterij</h3> <p class="chart-explanation">Een thuisbatterij **lost het terugleveren op**. Uw zonne-overschot laadt de batterij op (donkerblauwe balken, onder de nullijn). 's Avonds verbruikt u deze opgeslagen energie (lichtblauwe balken).</p> <div class="chart-canvas-container" id="scenario3CanvasContainer"><canvas id="scenario3ChartCanvas"></canvas></div> <div class="chart-summary" id="summary3"></div>`;
         }
     }
