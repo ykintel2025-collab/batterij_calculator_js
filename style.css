@@ -25,22 +25,11 @@ h2.question-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; co
 .interactive-settings { grid-column: 1 / -1; }
 .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
 .setting-row label { font-weight: 500; margin-right: 10px; flex-basis: 180px; text-align: left; }
-.setting-row input[type="range"], .setting-row select { flex-grow: 1; margin: 0 15px; }
+.setting-row input[type="range"] { flex-grow: 1; margin: 0 15px; }
 .setting-row .value-display { font-weight: 700; min-width: 60px; text-align: right; }
-.setting-row select { padding: 8px; border-radius: 8px; border: 1px solid #e0e6ed; background-color: white; }
 .version-display { font-size: 0.8em; color: #aaa; margin-top: 20px; text-align: center; }
 .chart-canvas-container { position: relative; height: 350px; width: 100%; }
 .chart-summary { display: flex; justify-content: space-around; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e6ed; flex-wrap: wrap; }
 .summary-item { font-size: 0.9em; padding: 0 10px; margin-bottom: 10px; }
 .summary-item strong { display: block; font-size: 1.2em; }
-.chart-with-indicator { display: flex; gap: 20px; align-items: stretch; }
-.chart-main { flex-grow: 1; position: relative; height: 350px; }
-.chart-sidebar { flex-basis: 80px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; }
-.battery-indicator { text-align: center; }
-.battery-header { display: flex; justify-content: space-between; font-size: 0.8em; font-weight: bold; color: #555; margin-bottom: 5px; padding: 0 5px; min-height: 1.2em; }
-.battery-outer { width: 60px; height: 120px; border: 3px solid #333; border-radius: 8px; margin: 0 auto; padding: 3px; position: relative; background-color: #f0f4f8; }
-.battery-top { width: 25px; height: 5px; background-color: #333; margin: -8px auto 3px; border-radius: 3px 3px 0 0; }
-.battery-level { background: linear-gradient(to top, #27ae60, #2ecc71); width: 100%; height: 0%; border-radius: 4px; position: absolute; bottom: 3px; left: 3px; transition: height 0.2s ease; }
-.battery-percentage { font-weight: bold; font-size: 1.2em; margin-top: 10px; }
-.status-laden { color: #2980b9; }
-.status-ontladen { color: #e74c3c; }
+.placeholder-message { color: #888; text-align: center; padding: 50px 20px; font-style: italic; }
