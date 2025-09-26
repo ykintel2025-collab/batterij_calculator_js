@@ -1,116 +1,27 @@
-let currentStep = 1;
-const totalSteps = 4;
-const formAnswers = {};
 let scenario1Chart, scenario2Chart, scenario3Chart;
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('startBtn').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById('start-scherm').style.display = 'none';
-        document.getElementById('calculator-scherm').style.display = 'block';
-        showStep(1);
-    });
-});
-
-function showStep(step) {
-    document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
-    const el = document.getElementById(`step-${step}`) || document.getElementById('resultaat-stap');
-    if (el) el.classList.add('active');
-    updateButtons();
-    updateProgressBar();
-}
-
-function updateButtons() {
-    const t = document.getElementById('terugBtn'), v = document.getElementById('volgendeBtn');
-    t.style.display = (currentStep > 1 && currentStep <= totalSteps + 1) ? 'block' : 'none';
-    v.style.display = (currentStep <= totalSteps) ? 'block' : 'none';
-    v.textContent = isLastStep() ? 'Bereken advies' : 'Volgende →';
-}
-
-function updateProgressBar() {
-    const totalVisibleSteps = totalSteps - (isStepSkipped(3) ? 1 : 0) - (isStepSkipped(4) ? 1 : 0);
-    let answeredQuestions = 0;
-    for (let i = 1; i < currentStep; i++) {
-        if (!isStepSkipped(i)) answeredQuestions++;
-    }
-    const percentage = (answeredQuestions / totalVisibleSteps) * 100;
-    document.getElementById('progressBar').style.width = `${percentage}%`;
-    document.getElementById('progressText').textContent = `${Math.round(percentage)}% Voltooid`;
-}
-
-function isLastStep() {
-    let nextVisibleStep = currentStep + 1;
-    while(nextVisibleStep <= totalSteps) {
-        if (!isStepSkipped(nextVisibleStep)) return false;
-        nextVisibleStep++;
-    }
-    return true;
-}
-
-function isStepSkipped(step) {
-    if (step === 3 && formAnswers['step-2'] === 'ja') return true;
-    if (step === 4 && formAnswers['step-2'] === 'nee') return true;
-    return false;
-}
-
-function nextStep() {
-    const cs = document.getElementById(`step-${currentStep}`);
-    const so = cs.querySelector('.selected');
-    if (currentStep === 4) {
-        const pi = document.getElementById('panelenInput');
-        if (!pi.value || parseInt(pi.value) < 0) {
-            alert("Vul een geldig aantal zonnepanelen in.");
-            return;
-        }
-        formAnswers['step-4'] = parseInt(pi.value);
-    } else {
-        if (!so) { alert("Selecteer een optie."); return; }
-        formAnswers[`step-${currentStep}`] = so.dataset.value;
-    }
-    if (isLastStep()) {
-        berekenAdvies();
-        return;
-    }
-    do {
-        currentStep++;
-    } while (isStepSkipped(currentStep));
-    showStep(currentStep);
-}
-
-function prevStep() {
-    do {
-        currentStep--;
-    } while (isStepSkipped(currentStep) && currentStep > 0);
-    if (currentStep >= 1) showStep(currentStep);
-}
-
-function selectAnswer(step, element) {
-    const c = document.getElementById(`step-${step}`);
-    c.querySelectorAll('.answer-option').forEach(el => el.classList.remove('selected'));
-    element.classList.add('selected');
-}
-
-function berekenAdvies() {
-    currentStep = totalSteps + 1;
     setupInteractiveControls();
-    showStep('resultaat-stap');
-}
+});
 
 function setupInteractiveControls() {
     const controls = ['verbruikSlider', 'panelenSlider'];
     controls.forEach(id => {
         const el = document.getElementById(id);
-        if(el) el.addEventListener('input', recalculateAndRedraw);
+        if (el) {
+            el.addEventListener('input', recalculateAndRedraw);
+        }
     });
-    document.getElementById('verbruikSlider').value = formAnswers['step-1'] || 3000;
-    document.getElementById('panelenSlider').value = (formAnswers['step-2'] === 'ja' && formAnswers['step-4']) ? formAnswers['step-4'] : (formAnswers['step-3'] === 'ja' ? 12 : 0);
+    // Stel initiële waarden in
+    document.getElementById('verbruikSlider').value = 3500;
+    document.getElementById('panelenSlider').value = 10;
     recalculateAndRedraw();
 }
 
 function recalculateAndRedraw() {
     const state = {
-        jaarlijksVerbruikKwh: parseInt(document.getElementById('verbruikSlider').value),
-        aantalPanelen: parseInt(document.getElementById('panelenSlider').value),
+        jaarlijksVerbruikKwh: parseInt(document.getElementById('verbruikSlider')?.value) || 3500,
+        aantalPanelen: parseInt(document.getElementById('panelenSlider')?.value) || 0,
     };
     const calculations = calculateAdvice(state);
     updateDashboardUI(state, calculations);
