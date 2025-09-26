@@ -12,60 +12,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showStep(step) {
     document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
-    document.getElementById(step)?.classList.add('active');
+    const el = document.getElementById(step);
+    if (el) el.classList.add('active');
 }
 
 function setupInteractiveControls() {
-    const controls = ['verbruikSlider', 'panelenSlider', 'evToggle', 'wpToggle', 'dynamicToggle'];
+    const controls = ['verbruikSlider', 'panelenSlider'];
     controls.forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.addEventListener('input', recalculateAndRedraw);
+        if (el) {
+            el.addEventListener('input', recalculateAndRedraw);
+        }
     });
+    // Stel initiële waarden in
     document.getElementById('verbruikSlider').value = 3500;
-    document.getElementById('panelenSlider').value = 12;
-    recalculateAndRedraw();
-}
-
-function setVerbruik(value) {
-    document.getElementById('verbruikSlider').value = value;
+    document.getElementById('panelenSlider').value = 10;
     recalculateAndRedraw();
 }
 
 function recalculateAndRedraw() {
     const state = {
-        jaarlijksVerbruikKwh: parseInt(document.getElementById('verbruikSlider').value),
-        aantalPanelen: parseInt(document.getElementById('panelenSlider').value),
-        heeftEV: document.getElementById('evToggle').checked,
-        heeftWarmtepomp: document.getElementById('wpToggle').checked
+        jaarlijksVerbruikKwh: parseInt(document.getElementById('verbruikSlider')?.value) || 3500,
+        aantalPanelen: parseInt(document.getElementById('panelenSlider')?.value) || 0,
     };
     const calculations = calculateAdvice(state);
     updateDashboardUI(state, calculations);
 }
 
 function calculateAdvice(state) {
-    const evVerbruik = state.heeftEV ? 3600 : 0;
-    const wpVerbruik = state.heeftWarmtepomp ? 2500 : 0;
-    const totaalJaarlijksVerbruik = state.jaarlijksVerbruikKwh + evVerbruik + wpVerbruik;
-    const totaalDagelijksVerbruik = totaalJaarlijksVerbruik / 365;
-
+    const totaalDagelijksVerbruik = state.jaarlijksVerbruikKwh / 365;
     const totaalWp = state.aantalPanelen * 430;
     const dagelijkseOpbrengst = totaalWp * 0.9 / 365;
-    
     const verbruikProfielRaw = [0.03,0.02,0.02,0.02,0.03,0.05,0.07,0.06,0.05,0.04,0.04,0.04,0.05,0.04,0.04,0.05,0.06,0.08,0.09,0.08,0.07,0.06,0.05,0.04];
     const sumProfiel = verbruikProfielRaw.reduce((a, b) => a + b, 0);
     const verbruikProfiel = verbruikProfielRaw.map(p => p / sumProfiel);
     const zonneProfiel = [0,0,0,0,0,0.01,0.03,0.06,0.09,0.11,0.13,0.14,0.13,0.12,0.09,0.05,0.03,0.01,0,0,0,0,0,0];
-    
     const geschaaldVerbruik = verbruikProfiel.map(p => p * totaalDagelijksVerbruik);
     const geschaaldeOpbrengst = zonneProfiel.map(p => p * dagelijkseOpbrengst);
-    
     const totaalOverschot = geschaaldeOpbrengst.reduce((sum, opbrengst, i) => {
         const overschot = opbrengst - geschaaldVerbruik[i];
         return sum + (overschot > 0 ? overschot : 0);
     }, 0);
-    
     const batterijCapaciteit = Math.max(5, Math.ceil(totaalOverschot / 5) * 5);
-    
     return { batterijCapaciteit, geschaaldVerbruik, geschaaldeOpbrengst };
 }
 
@@ -73,7 +61,7 @@ function updateDashboardUI(state, calcs) {
     document.getElementById('verbruikValue').textContent = `${state.jaarlijksVerbruikKwh} kWh`;
     document.getElementById('panelenValue').textContent = `${state.aantalPanelen}`;
     document.getElementById('capaciteitResultaat').textContent = `${calcs.batterijCapaciteit.toFixed(1)} kWh`;
-    
+
     const displayPanels = state.aantalPanelen > 0;
     document.getElementById('scenario2Div').style.display = displayPanels ? 'block' : 'none';
     document.getElementById('scenario3Div').style.display = displayPanels ? 'block' : 'none';
