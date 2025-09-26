@@ -43,12 +43,11 @@ function calculateAdvice(state) {
     const geschaaldVerbruik = verbruikProfiel.map(p => p * totaalDagelijksVerbruik);
     const geschaaldeOpbrengst = zonneProfiel.map(p => p * dagelijkseOpbrengst);
     
-    let nachtelijkVerbruik = 0;
-    for(let i=0; i<24; i++) {
-        if(i < 7 || i > 18) { nachtelijkVerbruik += geschaaldVerbruik[i]; }
-    }
-    const berekendeCapaciteit = nachtelijkVerbruik * 1.15;
-    const batterijCapaciteit = Math.max(5, Math.ceil(berekendeCapaciteit / 2.5) * 2.5);
+    const totaalOverschot = geschaaldeOpbrengst.reduce((sum, opbrengst, i) => {
+        const overschot = opbrengst - geschaaldVerbruik[i];
+        return sum + (overschot > 0 ? overschot : 0);
+    }, 0);
+    const batterijCapaciteit = Math.max(5, Math.ceil(totaalOverschot / 2.5) * 2.5);
     
     return { batterijCapaciteit, geschaaldVerbruik, geschaaldeOpbrengst };
 }
@@ -56,8 +55,15 @@ function calculateAdvice(state) {
 function updateDashboardUI(state, calcs) {
     document.getElementById('panelenValue').textContent = `${state.aantalPanelen}`;
     document.getElementById('capaciteitResultaat').textContent = `${calcs.batterijCapaciteit.toFixed(1)} kWh`;
-
-    const displayPanels = state.aantalPanelen > 0;
+    
+    const totaalVerbruik = state.basisVerbruikKwh + state.evVerbruikKwh + state.wpVerbruikKwh;
+    document.getElementById('totaalVerbruikUitleg').innerHTML = 
+        `Basisverbruik: <strong>${state.basisVerbruikKwh} kWh</strong><br>
+         + E-Auto: <strong>${state.evVerbruikKwh} kWh</strong><br>
+         + Warmtepomp: <strong>${state.wpVerbruikKwh} kWh</strong><br>
+         <hr style="border: none; border-top: 1px solid #ccc; margin: 5px 0;">
+         Totaal: <strong>${totaalVerbruik.toFixed(0)} kWh</strong>`;
+    
     renderScenario3Chart(calcs.geschaaldVerbruik, calcs.geschaaldeOpbrengst, calcs.batterijCapaciteit);
 }
 
