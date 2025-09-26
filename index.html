@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thuisbatterij Calculator - V2.0</title>
+    <title>Thuisbatterij Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,7 +13,6 @@
         <h1>Welkom bij de Thuisbatterij Calculator</h1>
         <p>Ontdek welke thuisbatterij het beste bij uw situatie past.</p>
         <a href="#" class="btn btn-primary" id="startBtn">Start de berekening</a>
-        <div class="version-display">Masterversie 2.0</div>
     </div>
 
     <div id="calculator-scherm" class="container" style="display: none;">
@@ -22,23 +21,13 @@
             <div class="results-grid">
                 <div class="result-card main-recommendation"> <h2>Uw Aanbevolen Batterijcapaciteit</h2> <p><strong id="capaciteitResultaat" style="font-size: 1.5em;"></strong></p> </div>
                 <div class="result-card interactive-settings">
-                    <h3>Pas uw situatie aan</h3>
-                    <div class="preset-buttons">
-                        <div class="preset-btn" onclick="setVerbruik(2500)">🧑‍ single/stel<br><small>~2500 kWh</small></div>
-                        <div class="preset-btn" onclick="setVerbruik(4000)">👨‍👩‍👧‍👦 Gezin<br><small>~4000 kWh</small></div>
-                        <div class="preset-btn" onclick="setVerbruik(5500)">🏠 Groot gezin<br><small>~5500 kWh</small></div>
-                    </div>
-                    <div class="setting-row"> <label for="verbruikSlider">Jaarlijks verbruik</label> <input type="range" id="verbruikSlider" min="1000" max="10000" step="100"> <span class="value-display" id="verbruikValue"></span> </div>
+                    <h3>Verfijn uw advies</h3>
+                    <div class="setting-row"> <label for="verbruikSlider">Jaarlijks verbruik</label> <input type="range" id="verbruikSlider" min="1000" max="15000" step="100"> <span class="value-display" id="verbruikValue"></span> </div>
                     <div class="setting-row"> <label for="panelenSlider">Aantal zonnepanelen</label> <input type="range" id="panelenSlider" min="0" max="40" step="1"> <span class="value-display" id="panelenValue"></span> </div>
-                    <div class="options-grid">
-                        <div class="option-item"><label><input type="checkbox" id="evToggle"> Elektrische auto</label></div>
-                        <div class="option-item"><label><input type="checkbox" id="wpToggle"> Warmtepomp</label></div>
-                        <div class="option-item"><label><input type="checkbox" id="dynamicToggle"> Dynamisch contract</label></div>
-                    </div>
                 </div>
-                <div class="chart-card" id="scenario3Div"> <h3>Scenario 3: Met Zonnepanelen & Thuisbatterij</h3><div class="chart-canvas-container"><canvas id="scenario3ChartCanvas"></canvas></div> <div class="chart-summary" id="summary3"></div> </div>
-                <div class="chart-card" id="scenario1Div"> <h3>Scenario 1: Zonder Zonnepanelen</h3><div class="chart-canvas-container"><canvas id="scenario1ChartCanvas"></canvas></div> <div class="chart-summary" id="summary1"></div> </div>
-                <div class="chart-card" id="scenario2Div"> <h3>Scenario 2: Met Zonnepanelen</h3><div class="chart-canvas-container"><canvas id="scenario2ChartCanvas"></canvas></div> <div class="chart-summary" id="summary2"></div> </div>
+                <div class="chart-card" id="scenario1Div"> <h3>Scenario 1: Uw Situatie Zonder Zonnepanelen</h3> <div class="chart-canvas-container"><canvas id="scenario1ChartCanvas"></canvas></div> <div class="chart-summary" id="summary1"></div> </div>
+                <div class="chart-card" id="scenario2Div"> <h3>Scenario 2: Met Zonnepanelen</h3> <div class="chart-canvas-container" id="scenario2CanvasContainer"><canvas id="scenario2ChartCanvas"></canvas></div> <div class="chart-summary" id="summary2"></div> </div>
+                <div class="chart-card" id="scenario3Div"> <h3>Scenario 3: Met Zonnepanelen & Thuisbatterij</h3> <div class="chart-canvas-container" id="scenario3CanvasContainer"><canvas id="scenario3ChartCanvas"></canvas></div> <div class="chart-summary" id="summary3"></div> </div>
             </div>
         </div>
     </div>
